@@ -83,6 +83,15 @@ export default function CustomerPortal() {
     const savedSmtp = localStorage.getItem('pickleball_smtp_config');
     const smtpConfig = savedSmtp ? JSON.parse(savedSmtp) : null;
 
+    // Static Test Run: If SMTP is unconfigured, run Sandbox Mode immediately (prevents failed fetch attempts)
+    if (!smtpConfig || !smtpConfig.host || !smtpConfig.auth || !smtpConfig.auth.user) {
+      setAuthMode('verify');
+      setSandboxEmailCode(code);
+      setShowSandboxToast(true);
+      setAuthSuccess('Running in Sandbox Mode. Verification code displayed below.');
+      return;
+    }
+
     try {
       // Dispatches the code to our local Nodemailer server relay
       const response = await fetch('http://localhost:5000/api/send-code', {
