@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { BookingProvider } from './context/BookingContext';
 import CustomerPortal from './customer/CustomerPortal';
 import CashierPortal from './cashier/CashierPortal';
+import AdminPortal from './admin/AdminPortal';
 import { Users, Shield, ArrowRight, Activity, Check } from 'lucide-react';
 
 function AppContent() {
-  const [route, setRoute] = useState('landing'); // 'customer', 'cashier', or 'landing'
-  const [hoveredCard, setHoveredCard] = useState(null); // 'customer', 'cashier' or null
+  const [route, setRoute] = useState('landing'); // 'customer', 'cashier', 'admin', or 'landing'
+  const [hoveredCard, setHoveredCard] = useState(null); // 'customer', 'cashier', 'admin' or null
 
   useEffect(() => {
     const handleRoute = () => {
@@ -15,6 +16,8 @@ function AppContent() {
 
       if (path.includes('cashier') || hash.includes('cashier')) {
         setRoute('cashier');
+      } else if (path.includes('admin') || hash.includes('admin')) {
+        setRoute('admin');
       } else if (path.includes('customer') || hash.includes('customer')) {
         setRoute('customer');
       } else {
@@ -45,6 +48,10 @@ function AppContent() {
 
   if (route === 'cashier') {
     return <CashierPortal />;
+  }
+
+  if (route === 'admin') {
+    return <AdminPortal />;
   }
 
   return (
@@ -140,6 +147,45 @@ function AppContent() {
             <ArrowRight size={16} style={{ marginLeft: '6px' }} />
           </button>
         </div>
+
+        {/* Admin Portal Card */}
+        <div 
+          style={{
+            ...styles.card,
+            ...(hoveredCard === 'admin' ? styles.cardHoverAdmin : {})
+          }}
+          className="glass-card"
+          onMouseEnter={() => setHoveredCard('admin')}
+          onMouseLeave={() => setHoveredCard(null)}
+          onClick={() => navigateTo('admin')}
+        >
+          <div style={styles.cardHeader}>
+            <div style={styles.iconWrapperAdmin}>
+              <Shield size={28} color="#c084fc" />
+            </div>
+            <h2 style={styles.cardTitle}>Admin Console</h2>
+          </div>
+          <p style={styles.cardDesc}>
+            Manage system operators, create cashier and customer accounts, audit registered accounts, and review database records.
+          </p>
+          <ul style={styles.featureList}>
+            <li style={styles.featureItem}><Check size={14} color="#c084fc" style={{ marginRight: '6px' }} /> Control accounts in database</li>
+            <li style={styles.featureItem}><Check size={14} color="#c084fc" style={{ marginRight: '6px' }} /> Register new cashier profiles</li>
+            <li style={styles.featureItem}><Check size={14} color="#c084fc" style={{ marginRight: '6px' }} /> Manage customer logins centrally</li>
+            <li style={styles.featureItem}><Check size={14} color="#c084fc" style={{ marginRight: '6px' }} /> Real-time active shifts overview</li>
+          </ul>
+          <button 
+            style={{
+              ...styles.btnAdmin,
+              ...(hoveredCard === 'admin' ? { transform: 'scale(1.02)' } : {})
+            }} 
+            className="btn"
+            onClick={(e) => { e.stopPropagation(); navigateTo('admin'); }}
+          >
+            <span>Enter Admin Dashboard</span>
+            <ArrowRight size={16} style={{ marginLeft: '6px' }} />
+          </button>
+        </div>
       </div>
 
       {/* Selector footer info */}
@@ -231,15 +277,16 @@ const styles = {
   },
   grid: {
     display: 'flex',
-    gap: '2rem',
+    gap: '1.5rem',
     width: '100%',
-    maxWidth: '850px',
+    maxWidth: '1050px',
     zIndex: 2,
     flexWrap: 'wrap',
+    justifyContent: 'center',
   },
   card: {
     flex: 1,
-    minWidth: '320px',
+    minWidth: '280px',
     background: 'rgba(15, 18, 30, 0.55)',
     border: '1px solid rgba(255, 255, 255, 0.05)',
     borderRadius: '16px',
@@ -259,6 +306,11 @@ const styles = {
   cardHoverCashier: {
     borderColor: 'rgba(0, 240, 255, 0.3)',
     boxShadow: '0 12px 30px rgba(0, 240, 255, 0.08)',
+    transform: 'translateY(-6px)',
+  },
+  cardHoverAdmin: {
+    borderColor: 'rgba(192, 132, 252, 0.3)',
+    boxShadow: '0 12px 30px rgba(192, 132, 252, 0.08)',
     transform: 'translateY(-6px)',
   },
   cardHeader: {
@@ -282,6 +334,16 @@ const styles = {
     height: '52px',
     background: 'rgba(0, 240, 255, 0.08)',
     border: '1px solid rgba(0, 240, 255, 0.15)',
+    borderRadius: '12px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconWrapperAdmin: {
+    width: '52px',
+    height: '52px',
+    background: 'rgba(192, 132, 252, 0.08)',
+    border: '1px solid rgba(192, 132, 252, 0.15)',
     borderRadius: '12px',
     display: 'flex',
     alignItems: 'center',
@@ -331,6 +393,19 @@ const styles = {
     marginTop: 'auto',
     padding: '0.8rem 1.25rem',
     background: '#00f0ff',
+    color: '#000',
+    fontWeight: 750,
+    fontSize: '0.85rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'transform 0.2s',
+  },
+  btnAdmin: {
+    width: '100%',
+    marginTop: 'auto',
+    padding: '0.8rem 1.25rem',
+    background: '#c084fc',
     color: '#000',
     fontWeight: 750,
     fontSize: '0.85rem',

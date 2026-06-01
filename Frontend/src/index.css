@@ -321,12 +321,58 @@ a:hover {
   100% { box-shadow: 0 0 10px rgba(204, 255, 0, 0.1); }
 }
 
+/* Premium Bounce / Spring Modal Scale */
+@keyframes modalScaleIn {
+  0% { opacity: 0; transform: scale(0.92) translateY(15px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Slide in from left with a bounce */
+@keyframes slideInLeftBounce {
+  0% { opacity: 0; transform: translateX(-120%) translateY(20px); }
+  70% { transform: translateX(5%) translateY(-2px); }
+  100% { opacity: 1; transform: translateX(0) translateY(0); }
+}
+
+/* Elegant Text Gradient Animation */
+@keyframes textShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Breathing Dual Neon Glow Cycle */
+@keyframes dualNeonGlow {
+  0%, 100% { border-color: rgba(204, 255, 0, 0.2); box-shadow: 0 0 15px rgba(204, 255, 0, 0.08), var(--shadow-md); }
+  50% { border-color: rgba(0, 240, 255, 0.35); box-shadow: 0 0 25px rgba(0, 240, 255, 0.18), var(--shadow-md); }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.4s var(--transition-normal) forwards;
 }
 
 .animate-pulse-neon {
   animation: pulseNeon 3s infinite ease-in-out;
+}
+
+.animate-modal-pop {
+  animation: modalScaleIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-slide-left-bounce {
+  animation: slideInLeftBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.15) forwards;
+}
+
+.animate-gradient-text {
+  background: linear-gradient(-45deg, #ffffff 0%, #ccff00 33%, #00f0ff 66%, #ffffff 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmer 5s infinite ease-in-out;
+}
+
+.animate-dual-neon {
+  animation: dualNeonGlow 4s infinite ease-in-out;
 }
 
 /* Layout Utilities */
@@ -359,4 +405,79 @@ a:hover {
   .grid-4 { grid-template-columns: 1fr; }
   .grid-3 { grid-template-columns: 1fr; }
   .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* 
+  =========================================
+  PREMIUM INTERACTIVE MOUSE & BUTTON EASING
+  =========================================
+*/
+
+/* Base smooth transition for all mouse interactions */
+button, 
+.btn, 
+a, 
+input, 
+select, 
+textarea, 
+.glass-card, 
+.glass-card-neon,
+tr,
+.slotBtn,
+.navBtn,
+.headerLoginBtn,
+.headerProfileBadge {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Premium scale & glow on hover */
+button:hover, 
+.btn:hover,
+.headerLoginBtn:hover,
+.createBtn:hover {
+  transform: scale(1.025) translateY(-1px) !important;
+  filter: brightness(1.08) !important;
+}
+
+/* Elegant shrink on active clicks */
+button:active, 
+.btn:active,
+.headerLoginBtn:active,
+.createBtn:active {
+  transform: scale(0.97) translateY(0) !important;
+  filter: brightness(0.95) !important;
+}
+
+/* Form element focuses */
+input:hover, 
+select:hover, 
+textarea:hover {
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+input:focus, 
+select:focus, 
+textarea:focus {
+  border-color: var(--accent-neon) !important;
+  box-shadow: 0 0 14px rgba(204, 255, 0, 0.15) !important;
+}
+
+/* Booking Slots hover scaling */
+.slotBtn:hover:not(:disabled) {
+  border-color: var(--accent-neon) !important;
+  color: #fff !important;
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Navigation button highlights */
+.navBtn:hover {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  transform: translateX(3px) !important;
+}
+
+/* Card lift adjustments */
+.glass-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 12px rgba(255, 255, 255, 0.01) !important;
 }

@@ -29,11 +29,22 @@ export default function BookingModal({ isOpen, onClose }) {
       setBookingDate(getRelativeDateString(0));
       setSelectedSlots([]);
       setAddons({ paddles: 0, balls: false, shoes: 0 });
-      setCustomerName('');
-      setCustomerPhone('');
-      setCustomerEmail('');
       setErrorMessage('');
       setCreatedBooking(null);
+
+      // PREFILL CUSTOMER INFO IF LOGGED IN
+      const savedUser = sessionStorage.getItem('customer_user');
+      if (savedUser) {
+        const userObj = JSON.parse(savedUser);
+        setCustomerName(userObj.name || '');
+        setCustomerEmail(userObj.email || '');
+        setCustomerPhone(userObj.phone || '');
+      } else {
+        setCustomerName('');
+        setCustomerPhone('');
+        setCustomerEmail('');
+      }
+
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -60,6 +71,14 @@ export default function BookingModal({ isOpen, onClose }) {
 
   const handlePayAndConfirm = (e) => {
     e.preventDefault();
+    
+    // Strict Guard: User must be signed in to complete a booking
+    const savedUser = sessionStorage.getItem('customer_user');
+    if (!savedUser) {
+      setErrorMessage('Authentication required. Please sign up or sign in to complete your booking.');
+      return;
+    }
+
     if (selectedSlots.length === 0) {
       setErrorMessage('Please select at least one hour slot from the grid.');
       return;
@@ -104,7 +123,7 @@ export default function BookingModal({ isOpen, onClose }) {
   return (
     <div style={styles.backdrop} onClick={onClose}>
       <div 
-        className="glass-card animate-fade-in" 
+        className="glass-card animate-modal-pop" 
         style={bookingState === 'form' ? styles.popupFormContainer : styles.popupTicketContainer} 
         onClick={(e) => e.stopPropagation()}
       >
@@ -250,6 +269,24 @@ export default function BookingModal({ isOpen, onClose }) {
 
               {/* Contact Information Form */}
               <h4 style={styles.sectionHeader}><User size={13} /> Customer Contact Details</h4>
+              
+              {/* Logged in info banner */}
+              {sessionStorage.getItem('customer_user') ? (
+                <div style={styles.authBanner}>
+                  <CheckCircle size={14} color="var(--accent-neon)" style={{ marginRight: '6px' }} />
+                  <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>
+                    Authenticated Profile: <strong style={{ color: '#fff' }}>{JSON.parse(sessionStorage.getItem('customer_user')).name}</strong> (Verified ✅)
+                  </span>
+                </div>
+              ) : (
+                <div style={styles.authBannerPrompt}>
+                  <HelpCircle size={14} color="#00f0ff" style={{ marginRight: '6px' }} />
+                  <span style={{ fontSize: '0.75rem', fontWeight: 500, color: '#94a3b8' }}>
+                    Want faster booking? Sign up/Login on the landing page to auto-fill your contact details.
+                  </span>
+                </div>
+              )}
+
               <div style={styles.formRow3}>
                 <div className="form-group" style={{ flex: 1 }}>
                   <label className="form-label">Full Name <span style={{ color: 'red' }}>*</span></label>
@@ -853,5 +890,24 @@ const styles = {
     display: 'flex',
     gap: '1rem',
     width: '100%',
+  },
+  authBanner: {
+    display: 'flex',
+    alignItems: 'center',
+    background: 'rgba(204, 255, 0, 0.04)',
+    border: '1px solid rgba(204, 255, 0, 0.15)',
+    padding: '0.5rem 0.75rem',
+    borderRadius: '6px',
+    marginBottom: '1rem',
+    color: '#ccff00',
+  },
+  authBannerPrompt: {
+    display: 'flex',
+    alignItems: 'center',
+    background: 'rgba(255, 255, 255, 0.02)',
+    border: '1px solid rgba(255, 255, 255, 0.05)',
+    padding: '0.5rem 0.75rem',
+    borderRadius: '6px',
+    marginBottom: '1rem',
   }
 };

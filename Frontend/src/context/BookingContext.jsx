@@ -229,6 +229,86 @@ export const BookingProvider = ({ children }) => {
     localStorage.setItem('pickleball_bookings', JSON.stringify(newBookings));
   };
 
+  // --- USER ACCOUNT SYSTEM ---
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const storedUsers = localStorage.getItem('pickleball_users');
+    if (storedUsers) {
+      // Clean start: Filter out any customer accounts to delete any registered customer emails
+      const parsedUsers = JSON.parse(storedUsers);
+      const filteredUsers = parsedUsers.filter(u => u.role !== 'Customer');
+      setUsers(filteredUsers);
+      localStorage.setItem('pickleball_users', JSON.stringify(filteredUsers));
+    } else {
+      // Initialize with only Admin and Cashier roles (No pre-registered Customer emails)
+      const defaultUsers = [
+        {
+          id: 'USR-001',
+          name: 'System Admin',
+          email: 'admin@netrally.com',
+          phone: '0917-000-0000',
+          password: 'adminpassword',
+          role: 'Admin',
+          status: 'Active',
+          verified: true,
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 'USR-002',
+          name: 'Alliah',
+          email: 'cashier@netrally.com',
+          phone: '0917-111-2222',
+          password: 'cashierpassword',
+          role: 'Cashier',
+          status: 'Active',
+          verified: true,
+          createdAt: new Date().toISOString()
+        }
+      ];
+      setUsers(defaultUsers);
+      localStorage.setItem('pickleball_users', JSON.stringify(defaultUsers));
+    }
+  }, []);
+
+  const addUser = (userData) => {
+    const existingUser = users.find(u => u.email.toLowerCase() === userData.email.toLowerCase());
+    if (existingUser) {
+      return { success: false, message: 'An account with this email address already exists.' };
+    }
+
+    const newUser = {
+      id: `USR-${Math.floor(100 + Math.random() * 900)}`,
+      status: 'Active',
+      verified: userData.verified !== undefined ? userData.verified : true,
+      createdAt: new Date().toISOString(),
+      ...userData
+    };
+
+    const updatedUsers = [...users, newUser];
+    setUsers(updatedUsers);
+    localStorage.setItem('pickleball_users', JSON.stringify(updatedUsers));
+    return { success: true, user: newUser };
+  };
+
+  const authenticateUser = (email, password, role) => {
+    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    if (!user) {
+      return { success: false, message: 'Invalid email address.' };
+    }
+    if (user.password !== password) {
+      return { success: false, message: 'Invalid password.' };
+    }
+    if (user.role !== role) {
+      return { success: false, message: `Access denied. Account is not registered as a ${role}.` };
+    }
+    if (role === 'Customer' && user.verified === false) {
+      return { success: false, message: 'Access denied. Please verify your email address first.' };
+    }
+    return { success: true, user };
+  };
+
+
   // 3. Helper to Check Slot Availability
   const checkAvailability = (courtId, date, requestedSlots) => {
     // Find all bookings for this court and date that are not cancelled
@@ -359,7 +439,10 @@ export const BookingProvider = ({ children }) => {
         addBooking,
         updateBookingStatus,
         cancelBooking,
-        getRelativeDateString
+        getRelativeDateString,
+        users,
+        addUser,
+        authenticateUser
       }}
     >
       {children}

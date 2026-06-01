@@ -12,7 +12,7 @@ export default function HeroSection({ onStartBooking }) {
           </span>
         </div>
         
-        <h1 style={styles.headline}>
+        <h1 style={styles.headline} className="animate-gradient-text">
           {"<brand name>"}
         </h1>
         <h2 style={styles.subHeadline}>
