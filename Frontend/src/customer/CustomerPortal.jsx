@@ -20,6 +20,7 @@ export default function CustomerPortal() {
   const [authEmail, setAuthEmail] = useState('');
   const [authPhone, setAuthPhone] = useState('');
   const [authPassword, setAuthPassword] = useState('');
+  const [authConfirmPassword, setAuthConfirmPassword] = useState('');
   
   const [verificationCode, setVerificationCode] = useState('');
   const [enteredCode, setEnteredCode] = useState('');
@@ -36,6 +37,72 @@ export default function CustomerPortal() {
     { id: 1, sender: 'bot', text: "Welcome to <brand name>! 🏓 How can I assist you with your court rentals today?" }
   ]);
   const [inputText, setInputText] = useState('');
+
+  // Password strength analytics helper
+  const getPasswordStrength = (password) => {
+    if (!password) return { score: 0, text: '', color: 'transparent', width: '0%' };
+    let score = 0;
+    if (password.length >= 8) score += 1;
+    if (/[A-Z]/.test(password)) score += 1;
+    if (/[0-9]/.test(password)) score += 1;
+    if (/[^A-Za-z0-9]/.test(password)) score += 1;
+
+    switch (score) {
+      case 0:
+      case 1:
+        return { score, text: 'Weak 🔴', color: '#ef4444', width: '25%' };
+      case 2:
+        return { score, text: 'Fair 🟠', color: '#f59e0b', width: '50%' };
+      case 3:
+        return { score, text: 'Good 🟡', color: '#eab308', width: '75%' };
+      case 4:
+        return { score, text: 'Strong 🟢', color: '#10b981', width: '100%' };
+      default:
+        return { score: 0, text: '', color: 'transparent', width: '0%' };
+    }
+  };
+
+  // Country code detector helper
+  const detectCountry = (phone) => {
+    if (!phone) return null;
+    const clean = phone.replace(/[\s\-\(\)]/g, '');
+    const countries = [
+      { prefix: '63', name: 'Philippines', emoji: '🇵🇭' },
+      { prefix: '09', name: 'Philippines', emoji: '🇵🇭' },
+      { prefix: '1', name: 'United States / Canada', emoji: '🇺🇸' },
+      { prefix: '44', name: 'United Kingdom', emoji: '🇬🇧' },
+      { prefix: '61', name: 'Australia', emoji: '🇦🇺' },
+      { prefix: '81', name: 'Japan', emoji: '🇯🇵' },
+      { prefix: '971', name: 'United Arab Emirates', emoji: '🇦🇪' },
+      { prefix: '65', name: 'Singapore', emoji: '🇸🇬' },
+      { prefix: '82', name: 'South Korea', emoji: '🇰🇷' },
+      { prefix: '86', name: 'China', emoji: '🇨🇳' },
+      { prefix: '886', name: 'Taiwan', emoji: '🇹🇼' },
+      { prefix: '966', name: 'Saudi Arabia', emoji: '🇸🇦' },
+      { prefix: '91', name: 'India', emoji: '🇮🇳' },
+      { prefix: '60', name: 'Malaysia', emoji: '🇲🇾' },
+      { prefix: '64', name: 'New Zealand', emoji: '🇳🇿' },
+      { prefix: '33', name: 'France', emoji: '🇫🇷' },
+      { prefix: '49', name: 'Germany', emoji: '🇩🇪' },
+      { prefix: '39', name: 'Italy', emoji: '🇮🇹' },
+      { prefix: '34', name: 'Spain', emoji: '🇪🇸' },
+      { prefix: '7', name: 'Russia', emoji: '🇷🇺' }
+    ];
+
+    if (clean.startsWith('+')) {
+      const numeric = clean.slice(1);
+      const sorted = [...countries].sort((a, b) => b.prefix.length - a.prefix.length);
+      for (const country of sorted) {
+        if (numeric.startsWith(country.prefix)) return country;
+      }
+    } else {
+      const sorted = [...countries].sort((a, b) => b.prefix.length - a.prefix.length);
+      for (const country of sorted) {
+        if (clean.startsWith(country.prefix)) return country;
+      }
+    }
+    return null;
+  };
 
   const startBooking = () => {
     const savedUser = sessionStorage.getItem('customer_user');
@@ -66,6 +133,12 @@ export default function CustomerPortal() {
     e.preventDefault();
     setAuthError('');
     setAuthSuccess('');
+
+    // Check if passwords match
+    if (authPassword !== authConfirmPassword) {
+      setAuthError('Passwords do not match. Please verify your typing.');
+      return;
+    }
 
     // Check if email already exists
     const existing = users.find(u => u.email.toLowerCase() === authEmail.toLowerCase());
@@ -168,6 +241,7 @@ export default function CustomerPortal() {
       setAuthEmail('');
       setAuthPhone('');
       setAuthPassword('');
+      setAuthConfirmPassword('');
       setEnteredCode('');
     } else {
       setAuthError(res.message);
@@ -445,19 +519,47 @@ export default function CustomerPortal() {
                     required
                   />
                 </div>
-                <div className="form-group">
+                 <div className="form-group">
                   <label className="form-label" htmlFor="reg-phone">Contact Number</label>
                   <input
                     id="reg-phone"
                     type="text"
                     className="form-control"
-                    placeholder="0917-888-2938"
+                    placeholder="e.g. +639178882938 or 0917-xxx-xxxx"
                     value={authPhone}
                     onChange={(e) => setAuthPhone(e.target.value)}
                     required
                   />
+                  {(() => {
+                    const country = detectCountry(authPhone);
+                    if (country) {
+                      return (
+                        <div style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.4rem',
+                          background: 'rgba(0, 240, 255, 0.08)',
+                          border: '1px solid rgba(0, 240, 255, 0.15)',
+                          color: '#00f0ff',
+                          fontSize: '0.7rem',
+                          fontWeight: 700,
+                          padding: '0.35rem 0.75rem',
+                          borderRadius: '20px',
+                          marginTop: '0.5rem',
+                          letterSpacing: '0.02em',
+                          animation: 'fadeIn 0.3s ease-out forwards',
+                          boxShadow: '0 0 10px rgba(0, 240, 255, 0.05)',
+                          transition: 'all 0.3s ease'
+                        }}>
+                          <span>{country.emoji}</span>
+                          <span>Origin: <strong style={{ color: '#fff' }}>{country.name}</strong></span>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
                 </div>
-                <div className="form-group" style={{ marginBottom: '1.75rem' }}>
+                <div className="form-group">
                   <label className="form-label" htmlFor="reg-password">Password</label>
                   <input
                     id="reg-password"
@@ -468,6 +570,47 @@ export default function CustomerPortal() {
                     onChange={(e) => setAuthPassword(e.target.value)}
                     required
                   />
+                  {(() => {
+                    const strength = getPasswordStrength(authPassword);
+                    if (authPassword) {
+                      return (
+                        <div style={{ marginTop: '0.5rem', transition: 'all 0.3s ease' }}>
+                          <div style={{ height: '4px', width: '100%', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden' }}>
+                            <div style={{ height: '100%', width: strength.width, background: strength.color, transition: 'all 0.3s ease-in-out' }}></div>
+                          </div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', marginTop: '4px', color: '#94a3b8' }}>
+                            <span>Password Strength:</span>
+                            <span style={{ color: strength.color, fontWeight: 700, transition: 'all 0.3s ease' }}>{strength.text}</span>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
+                </div>
+                <div className="form-group" style={{ marginBottom: '1.75rem' }}>
+                  <label className="form-label" htmlFor="reg-confirm-password">Confirm Password</label>
+                  <input
+                    id="reg-confirm-password"
+                    type="password"
+                    className="form-control"
+                    placeholder="••••••••"
+                    value={authConfirmPassword}
+                    onChange={(e) => setAuthConfirmPassword(e.target.value)}
+                    required
+                  />
+                  {authPassword && authConfirmPassword && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', marginTop: '4px' }}>
+                      <span>Passwords Match:</span>
+                      <span style={{ 
+                        color: authPassword === authConfirmPassword ? '#10b981' : '#ef4444', 
+                        fontWeight: 700,
+                        transition: 'all 0.3s ease'
+                      }}>
+                        {authPassword === authConfirmPassword ? 'Matched 🟢' : 'Do Not Match 🔴'}
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <button type="submit" className="btn btn-primary" style={styles.authBtn}>
                   Register Account
