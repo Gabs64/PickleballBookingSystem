@@ -224,18 +224,7 @@ export default function BookingTimeline({ onQuickBook }) {
                 </button>
               )}
 
-              {inspectedBooking.status !== 'Completed' && (
-                <button 
-                  onClick={() => {
-                    handleStatusUpdate('Cancelled');
-                    setInspectedBooking(null); // auto close
-                  }}
-                  className="btn btn-danger" 
-                  style={{ ...styles.actionBtn, flex: 1 }}
-                >
-                  <X size={14} /> Cancel Booking
-                </button>
-              )}
+              {/* Cancellation button deleted in compliance with strict No-Refund & No-Cancellation policy */}
 
             </div>
           </div>

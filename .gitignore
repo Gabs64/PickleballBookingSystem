@@ -1,0 +1,28 @@
+# Node.js dependencies (Never commit node_modules!)
+node_modules/
+Frontend/node_modules/
+Backend/node_modules/
+
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local.local
+
+# Build output directories
+dist/
+build/
+Frontend/dist/
+Frontend/build/
+
+# IDE and OS files
+.DS_Store
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

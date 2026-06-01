@@ -94,7 +94,7 @@ function AppContent() {
             <li style={styles.featureItem}><Check size={14} color="#ccff00" style={{ marginRight: '6px' }} /> ₱450.00 Flat Hourly Rate</li>
             <li style={styles.featureItem}><Check size={14} color="#ccff00" style={{ marginRight: '6px' }} /> Quick-Book Dropbox Selector</li>
             <li style={styles.featureItem}><Check size={14} color="#ccff00" style={{ marginRight: '6px' }} /> GCash Sandbox Checkout</li>
-            <li style={styles.featureItem}><Check size={14} color="#ccff00" style={{ marginRight: '6px' }} /> Searchable Pass & Cancel engine</li>
+            <li style={styles.featureItem}><Check size={14} color="#ccff00" style={{ marginRight: '6px' }} /> Searchable Pass & Checkout engine</li>
           </ul>
           <button 
             style={{

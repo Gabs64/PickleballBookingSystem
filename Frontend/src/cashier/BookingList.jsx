@@ -216,16 +216,7 @@ export default function BookingList() {
                           </button>
                         )}
 
-                        {b.status !== 'Completed' && b.status !== 'Cancelled' && (
-                          <button 
-                            onClick={() => handleAction(b.id, 'Cancelled')} 
-                            style={{ ...styles.iconActionBtn, color: '#f43f5e', background: 'rgba(244, 63, 94, 0.1)' }}
-                            className="btn btn-secondary btn-sm"
-                            title="Cancel Booking"
-                          >
-                            <X size={12} />
-                          </button>
-                        )}
+                        {/* Cancellation button untracked in compliance with strict No-Refund & No-Cancellation policy */}
                       </div>
                     </td>
                   </tr>
@@ -348,17 +339,7 @@ export default function BookingList() {
                   Mark Completed
                 </button>
               )}
-              {inspectedBooking.status !== 'Completed' && inspectedBooking.status !== 'Cancelled' && (
-                <button 
-                  onClick={() => {
-                    handleAction(inspectedBooking.id, 'Cancelled');
-                    setInspectedBooking(null);
-                  }} 
-                  className="btn btn-danger"
-                >
-                  Cancel Booking
-                </button>
-              )}
+              {/* Cancellation button untracked in compliance with strict No-Refund & No-Cancellation policy */}
             </div>
           </div>
         )}

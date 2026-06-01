@@ -215,7 +215,7 @@ export default function CustomerPortal() {
       } else if (userText.toLowerCase().includes('paddle') || userText.toLowerCase().includes('gear')) {
         reply = "Yes, we rent Carbon Pro paddles at ₱50.00/hr, can of 3 balls for ₱150.00, and ankle-protecting court shoes for ₱100.00 flat fee!";
       } else if (userText.toLowerCase().includes('cancel') || userText.toLowerCase().includes('refund')) {
-        reply = "Please visit or contact our cashier terminal receptionist to manage, cancel, or refund your court bookings.";
+        reply = "NetRally Arena operates under a strict NO REFUND and NO CANCELLATION policy. Once a court reservation is paid and booked, the schedule is locked and cannot be altered, cancelled, or refunded.";
       }
       setMessages(prev => [...prev, { id: Date.now() + 2, sender: 'bot', text: reply }]);
     }, 800);
@@ -600,10 +600,10 @@ export default function CustomerPortal() {
                 🏓 Rent Paddles?
               </button>
               <button 
-                onClick={() => handleFaqClick("What is your refund policy?", "To cancel or refund a booking, please coordinate with our receptionist at the cashier console terminal.")} 
+                onClick={() => handleFaqClick("What is your refund policy?", "NetRally Arena operates under a strict NO REFUND and NO CANCELLATION policy. Once a court reservation is paid and booked, the schedule is locked and cannot be cancelled or refunded.")} 
                 style={styles.faqTag}
               >
-                🔄 Cancellation Policy?
+                🔄 No Refund Policy
               </button>
             </div>
 
