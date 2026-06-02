@@ -6,7 +6,10 @@ import Badge from '../components/Badge';
 export default function BookingModal({ isOpen, onClose }) {
   const { courts, operatingHours, gearRates, checkAvailability, calculateRates, addBooking, getRelativeDateString } = useBooking();
 
-  const [bookingState, setBookingState] = useState('form'); // 'form' or 'ticket'
+  const [bookingState, setBookingState] = useState('form'); // 'form', 'payment_scan', 'ticket'
+  const [paymentTimer, setPaymentTimer] = useState(300); // 5 minutes in seconds
+  const [paymentStatusMessage, setPaymentStatusMessage] = useState('Awaiting e-wallet scan...');
+  const [isVerifying, setIsVerifying] = useState(false);
   
   // Selection States
   const [courtId, setCourtId] = useState('court-1');
@@ -31,6 +34,7 @@ export default function BookingModal({ isOpen, onClose }) {
       setAddons({ paddles: 0, balls: false, shoes: 0 });
       setErrorMessage('');
       setCreatedBooking(null);
+      setPaymentTimer(300);
 
       // PREFILL CUSTOMER INFO IF LOGGED IN
       const savedUser = sessionStorage.getItem('customer_user');
@@ -47,9 +51,19 @@ export default function BookingModal({ isOpen, onClose }) {
 
       document.body.style.overflow = 'hidden';
     } else {
+      if (window.paymentTimers) {
+        window.paymentTimers.forEach(t => clearTimeout(t));
+        window.paymentTimers = null;
+      }
       document.body.style.overflow = 'unset';
     }
-    return () => { document.body.style.overflow = 'unset'; };
+    return () => { 
+      if (window.paymentTimers) {
+        window.paymentTimers.forEach(t => clearTimeout(t));
+        window.paymentTimers = null;
+      }
+      document.body.style.overflow = 'unset'; 
+    };
   }, [isOpen]);
 
   // Reset selected slots when court or date changes
@@ -67,6 +81,27 @@ export default function BookingModal({ isOpen, onClose }) {
     } else {
       setSelectedSlots([...selectedSlots, slot].sort());
     }
+  };
+
+  // 5-minute Countdown Timer Effect
+  useEffect(() => {
+    let interval = null;
+    if (bookingState === 'payment_scan' && paymentTimer > 0) {
+      interval = setInterval(() => {
+        setPaymentTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (paymentTimer === 0 && bookingState === 'payment_scan') {
+      setErrorMessage('Payment session expired. Please try booking again.');
+      setBookingState('form');
+    }
+    return () => clearInterval(interval);
+  }, [bookingState, paymentTimer]);
+
+  // Format seconds to MM:SS
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   const handlePayAndConfirm = (e) => {
@@ -92,6 +127,39 @@ export default function BookingModal({ isOpen, onClose }) {
       return;
     }
 
+    // Launch QR scanning screen
+    setPaymentTimer(300);
+    setPaymentStatusMessage(`Awaiting secure ${paymentMethod.split(' ')[0]} payment scan...`);
+    setIsVerifying(false);
+    setBookingState('payment_scan');
+
+    // Simulate multi-stage authentication scan progression automatically
+    const t1 = setTimeout(() => {
+      setPaymentStatusMessage('Scan detected! Authorizing e-wallet account details...');
+      setIsVerifying(true);
+    }, 4500);
+
+    const t2 = setTimeout(() => {
+      setPaymentStatusMessage('Account validated. Authenticating payment credentials...');
+    }, 8500);
+
+    const t3 = setTimeout(() => {
+      setPaymentStatusMessage('Payment confirmed! Registering your court pass...');
+      handleSimulatePaymentSuccess();
+    }, 11500);
+
+    // Save timer references to local window so we can clear them on manual bypass
+    window.paymentTimers = [t1, t2, t3];
+  };
+
+  // Finalizes the booking slot in the mock DB and goes to ticket
+  const handleSimulatePaymentSuccess = () => {
+    // Clear any active automated timers
+    if (window.paymentTimers) {
+      window.paymentTimers.forEach(t => clearTimeout(t));
+      window.paymentTimers = null;
+    }
+
     const payload = {
       customerName,
       customerEmail,
@@ -112,6 +180,7 @@ export default function BookingModal({ isOpen, onClose }) {
       setBookingState('ticket');
     } else {
       setErrorMessage(result.message);
+      setBookingState('form');
     }
   };
 
@@ -371,6 +440,151 @@ export default function BookingModal({ isOpen, onClose }) {
               </div>
             </div>
           </form>
+        ) : bookingState === 'payment_scan' ? (
+          // RENDER DYNAMIC QR SCANNING AND TIMER SCREEN
+          <div style={styles.scannerOuter} className="animate-fade-in">
+            <div style={styles.scannerCard}>
+              
+              {/* E-Wallet Selector Header */}
+              <div style={{
+                ...styles.scannerHeader,
+                background: paymentMethod.includes('GCash') 
+                  ? 'linear-gradient(90deg, #0056B3 0%, #007BFF 100%)' 
+                  : 'linear-gradient(90deg, #FF6F00 0%, #FF8F00 100%)'
+              }}>
+                <span style={styles.scannerMerchant}>MERCHANT: NETRALLY ARENA</span>
+                <h4 style={styles.scannerMethod}>{paymentMethod} Secure Gateway</h4>
+              </div>
+
+              <div style={styles.scannerBody}>
+                {/* Timer Clock */}
+                <div style={styles.timerWrapper}>
+                  <span style={styles.timerLabel}>SECURE TIMEOUT CLOCK</span>
+                  <div style={styles.timerClock} className="animate-pulse-neon">
+                    {formatTime(paymentTimer)}
+                  </div>
+                </div>
+
+                <p style={styles.scannerInstruction}>
+                  Open your mobile wallet app and **scan the secure QR code** to authorize the court transaction pass.
+                </p>
+
+                {/* QR Code Container */}
+                <div style={styles.qrContainer}>
+                  {/* Glowing scan laser line */}
+                  <div style={styles.laserLine}></div>
+                  
+                  {/* Inline Premium Vector SVG QR Code */}
+                  <svg width="180" height="180" viewBox="0 0 100 100" style={{ display: 'block', opacity: 0.9 }}>
+                    {/* Corners */}
+                    <rect x="0" y="0" width="25" height="25" fill={paymentMethod.includes('GCash') ? '#00f0ff' : '#ccff00'} />
+                    <rect x="3" y="3" width="19" height="19" fill="#131929" />
+                    <rect x="6" y="6" width="13" height="13" fill={paymentMethod.includes('GCash') ? '#00f0ff' : '#ccff00'} />
+                    
+                    <rect x="75" y="0" width="25" height="25" fill={paymentMethod.includes('GCash') ? '#00f0ff' : '#ccff00'} />
+                    <rect x="78" y="3" width="19" height="19" fill="#131929" />
+                    <rect x="81" y="6" width="13" height="13" fill={paymentMethod.includes('GCash') ? '#00f0ff' : '#ccff00'} />
+                    
+                    <rect x="0" y="75" width="25" height="25" fill={paymentMethod.includes('GCash') ? '#00f0ff' : '#ccff00'} />
+                    <rect x="3" y="78" width="19" height="19" fill="#131929" />
+                    <rect x="6" y="81" width="13" height="13" fill={paymentMethod.includes('GCash') ? '#00f0ff' : '#ccff00'} />
+                    
+                    {/* Random Grid Data Nodes */}
+                    <rect x="35" y="5" width="5" height="15" fill="#f8fafc" />
+                    <rect x="45" y="0" width="10" height="5" fill="#f8fafc" />
+                    <rect x="60" y="10" width="5" height="10" fill="#f8fafc" />
+                    
+                    <rect x="5" y="35" width="15" height="5" fill="#f8fafc" />
+                    <rect x="0" y="45" width="5" height="10" fill="#f8fafc" />
+                    <rect x="10" y="60" width="10" height="5" fill="#f8fafc" />
+                    
+                    <rect x="30" y="30" width="15" height="15" fill="#f8fafc" />
+                    <rect x="35" y="35" width="5" height="5" fill="#131929" />
+                    
+                    <rect x="55" y="30" width="15" height="5" fill="#f8fafc" />
+                    <rect x="50" y="40" width="5" height="15" fill="#f8fafc" />
+                    <rect x="65" y="50" width="10" height="5" fill="#f8fafc" />
+                    
+                    <rect x="30" y="55" width="5" height="15" fill="#f8fafc" />
+                    <rect x="40" y="50" width="15" height="5" fill="#f8fafc" />
+                    <rect x="35" y="70" width="10" height="5" fill="#f8fafc" />
+                    
+                    <rect x="55" y="55" width="15" height="15" fill="#f8fafc" />
+                    <rect x="60" y="60" width="5" height="5" fill="#131929" />
+                    
+                    <rect x="80" y="35" width="5" height="15" fill="#f8fafc" />
+                    <rect x="90" y="45" width="10" height="5" fill="#f8fafc" />
+                    
+                    <rect x="35" y="85" width="15" height="5" fill="#f8fafc" />
+                    <rect x="50" y="80" width="5" height="10" fill="#f8fafc" />
+                    <rect x="60" y="90" width="15" height="5" fill="#f8fafc" />
+                    <rect x="80" y="80" width="10" height="10" fill="#f8fafc" />
+                    
+                    {/* Logo Emblem Placeholder in Center */}
+                    <rect x="45" y="45" width="10" height="10" fill={paymentMethod.includes('GCash') ? '#00f0ff' : '#ccff00'} />
+                  </svg>
+                </div>
+
+                {/* Status Logs */}
+                <div style={styles.statusMessageBox}>
+                  <div style={{
+                    ...styles.statusDot, 
+                    background: isVerifying ? 'var(--accent-neon)' : '#00f0ff',
+                    boxShadow: isVerifying ? '0 0 10px var(--accent-neon)' : '0 0 10px #00f0ff',
+                    animation: 'pulse 1.5s infinite'
+                  }}></div>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>
+                    {paymentStatusMessage}
+                  </span>
+                </div>
+
+                <div style={styles.paymentInfoBox}>
+                  <div style={styles.infoLineInline}>
+                    <span style={styles.infoLabelInline}>PAYEE BILL:</span>
+                    <strong style={{ color: 'var(--accent-neon)', fontSize: '1rem' }}>₱{liveRates?.total.toFixed(2)}</strong>
+                  </div>
+                  <div style={styles.infoLineInline}>
+                    <span style={styles.infoLabelInline}>REF CODE:</span>
+                    <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: '#cbd5e1' }}>REF-NETRALLY-MOCK</span>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Action Buttons */}
+              <div style={styles.scannerFooter}>
+                <button 
+                  type="button" 
+                  onClick={() => {
+                    if (window.paymentTimers) {
+                      window.paymentTimers.forEach(t => clearTimeout(t));
+                      window.paymentTimers = null;
+                    }
+                    setBookingState('form');
+                  }} 
+                  className="btn btn-secondary" 
+                  style={{ flex: 1 }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="button" 
+                  onClick={handleSimulatePaymentSuccess} 
+                  className="btn btn-primary" 
+                  style={{ 
+                    flex: 2, 
+                    background: 'var(--accent-neon)', 
+                    color: 'var(--text-inverse)',
+                    fontWeight: 800,
+                    boxShadow: '0 4px 15px rgba(204,255,0,0.25)'
+                  }}
+                >
+                  ⚡ Simulate Payment
+                </button>
+              </div>
+
+            </div>
+          </div>
         ) : (
           // RENDER SUCCESS RECEIPT DIGITAL TICKET
           <div style={styles.ticketOuter} className="animate-fade-in">
@@ -909,5 +1123,145 @@ const styles = {
     padding: '0.5rem 0.75rem',
     borderRadius: '6px',
     marginBottom: '1rem',
+  },
+  scannerOuter: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    padding: '0.5rem 0',
+  },
+  scannerCard: {
+    width: '100%',
+    background: '#131929',
+    borderRadius: '16px',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    boxShadow: '0 15px 35px rgba(0, 0, 0, 0.5)',
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  scannerHeader: {
+    padding: '1.25rem 1.5rem',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.25rem',
+  },
+  scannerMerchant: {
+    fontSize: '0.65rem',
+    fontWeight: 800,
+    color: 'rgba(255, 255, 255, 0.75)',
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+  },
+  scannerMethod: {
+    fontSize: '1.1rem',
+    fontWeight: 800,
+    color: '#fff',
+    margin: 0,
+    fontFamily: "'Outfit', sans-serif",
+  },
+  scannerBody: {
+    padding: '1.5rem',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '1.25rem',
+  },
+  timerWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '0.25rem',
+  },
+  timerLabel: {
+    fontSize: '0.6rem',
+    fontWeight: 700,
+    color: '#64748b',
+    letterSpacing: '0.08em',
+  },
+  timerClock: {
+    fontSize: '2rem',
+    fontWeight: 800,
+    color: 'var(--accent-neon)',
+    fontFamily: "'Outfit', sans-serif",
+    letterSpacing: '0.05em',
+  },
+  scannerInstruction: {
+    fontSize: '0.75rem',
+    color: '#94a3b8',
+    textAlign: 'center',
+    lineHeight: 1.5,
+    maxWidth: '320px',
+    margin: 0,
+  },
+  qrContainer: {
+    position: 'relative',
+    background: '#090a0f',
+    padding: '1rem',
+    borderRadius: '12px',
+    border: '1px solid rgba(255,255,255,0.06)',
+    boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.8)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+    width: '210px',
+    height: '210px',
+  },
+  laserLine: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: '2px',
+    background: 'linear-gradient(90deg, rgba(204, 255, 0, 0) 0%, #ccff00 50%, rgba(204, 255, 0, 0) 100%)',
+    boxShadow: '0 0 10px #ccff00, 0 0 5px #ccff00',
+    animation: 'scanLaser 3s infinite linear',
+    zIndex: 5,
+    pointerEvents: 'none',
+  },
+  statusMessageBox: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.6rem',
+    background: 'rgba(255, 255, 255, 0.02)',
+    border: '1px solid rgba(255, 255, 255, 0.05)',
+    padding: '0.65rem 1rem',
+    borderRadius: '8px',
+    width: '100%',
+    justifyContent: 'center',
+  },
+  statusDot: {
+    width: '8px',
+    height: '8px',
+    borderRadius: '50%',
+  },
+  paymentInfoBox: {
+    width: '100%',
+    background: 'rgba(9, 10, 15, 0.4)',
+    border: '1px solid rgba(255, 255, 255, 0.04)',
+    borderRadius: '10px',
+    padding: '0.75rem 1rem',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.5rem',
+  },
+  infoLineInline: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  infoLabelInline: {
+    fontSize: '0.65rem',
+    fontWeight: 700,
+    color: '#64748b',
+    letterSpacing: '0.04em',
+  },
+  scannerFooter: {
+    background: '#101422',
+    padding: '1.25rem 1.5rem',
+    display: 'flex',
+    gap: '0.75rem',
+    borderTop: '1px solid rgba(255, 255, 255, 0.06)',
   }
 };
