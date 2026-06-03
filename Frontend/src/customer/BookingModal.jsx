@@ -39,10 +39,16 @@ export default function BookingModal({ isOpen, onClose }) {
       // PREFILL CUSTOMER INFO IF LOGGED IN
       const savedUser = sessionStorage.getItem('customer_user');
       if (savedUser) {
-        const userObj = JSON.parse(savedUser);
-        setCustomerName(userObj.name || '');
-        setCustomerEmail(userObj.email || '');
-        setCustomerPhone(userObj.phone || '');
+        try {
+          const userObj = JSON.parse(savedUser);
+          if (userObj) {
+            setCustomerName(userObj.name || '');
+            setCustomerEmail(userObj.email || '');
+            setCustomerPhone(userObj.phone || '');
+          }
+        } catch (e) {
+          console.error('Error parsing customer user in BookingModal:', e);
+        }
       } else {
         setCustomerName('');
         setCustomerPhone('');
@@ -340,21 +346,34 @@ export default function BookingModal({ isOpen, onClose }) {
               <h4 style={styles.sectionHeader}><User size={13} /> Customer Contact Details</h4>
               
               {/* Logged in info banner */}
-              {sessionStorage.getItem('customer_user') ? (
-                <div style={styles.authBanner}>
-                  <CheckCircle size={14} color="var(--accent-neon)" style={{ marginRight: '6px' }} />
-                  <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>
-                    Authenticated Profile: <strong style={{ color: '#fff' }}>{JSON.parse(sessionStorage.getItem('customer_user')).name}</strong> (Verified ✅)
-                  </span>
-                </div>
-              ) : (
-                <div style={styles.authBannerPrompt}>
-                  <HelpCircle size={14} color="#00f0ff" style={{ marginRight: '6px' }} />
-                  <span style={{ fontSize: '0.75rem', fontWeight: 500, color: '#94a3b8' }}>
-                    Want faster booking? Sign up/Login on the landing page to auto-fill your contact details.
-                  </span>
-                </div>
-              )}
+              {(() => {
+                try {
+                  const saved = sessionStorage.getItem('customer_user');
+                  if (saved) {
+                    const userObj = JSON.parse(saved);
+                    if (userObj && userObj.name) {
+                      return (
+                        <div style={styles.authBanner}>
+                          <CheckCircle size={14} color="var(--accent-neon)" style={{ marginRight: '6px' }} />
+                          <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>
+                            Authenticated Profile: <strong style={{ color: '#fff' }}>{userObj.name}</strong> (Verified ✅)
+                          </span>
+                        </div>
+                      );
+                    }
+                  }
+                } catch (e) {
+                  console.error('Error parsing customer user in AuthBanner:', e);
+                }
+                return (
+                  <div style={styles.authBannerPrompt}>
+                    <HelpCircle size={14} color="#00f0ff" style={{ marginRight: '6px' }} />
+                    <span style={{ fontSize: '0.75rem', fontWeight: 500, color: '#94a3b8' }}>
+                      Want faster booking? Sign up/Login on the landing page to auto-fill your contact details.
+                    </span>
+                  </div>
+                );
+              })()}
 
               <div style={styles.formRow3}>
                 <div className="form-group" style={{ flex: 1 }}>
@@ -541,7 +560,7 @@ export default function BookingModal({ isOpen, onClose }) {
                 <div style={styles.paymentInfoBox}>
                   <div style={styles.infoLineInline}>
                     <span style={styles.infoLabelInline}>PAYEE BILL:</span>
-                    <strong style={{ color: 'var(--accent-neon)', fontSize: '1rem' }}>₱{liveRates?.total.toFixed(2)}</strong>
+                    <strong style={{ color: 'var(--accent-neon)', fontSize: '1rem' }}>₱{liveRates ? liveRates.total.toFixed(2) : '0.00'}</strong>
                   </div>
                   <div style={styles.infoLineInline}>
                     <span style={styles.infoLabelInline}>REF CODE:</span>
@@ -616,12 +635,12 @@ export default function BookingModal({ isOpen, onClose }) {
                 <div style={styles.passGrid2}>
                   <div>
                     <span style={styles.passLabel}>DATE</span>
-                    <span style={styles.passValue}>{createdBooking.date}</span>
+                    <span style={styles.passValue}>{createdBooking?.date}</span>
                   </div>
                   <div>
                     <span style={styles.passLabel}>RESERVATION CODE</span>
                     <span style={{ ...styles.passValue, color: '#ccff00', fontFamily: 'monospace' }}>
-                      {createdBooking.id}
+                      {createdBooking?.id}
                     </span>
                   </div>
                 </div>
@@ -630,7 +649,7 @@ export default function BookingModal({ isOpen, onClose }) {
                   <div>
                     <span style={styles.passLabel}>RESERVED SLOTS</span>
                     <span style={{ ...styles.passValue, fontSize: '0.85rem' }}>
-                      {createdBooking.slots.join(', ')}
+                      {createdBooking?.slots?.join(', ')}
                     </span>
                   </div>
                 </div>
@@ -638,11 +657,11 @@ export default function BookingModal({ isOpen, onClose }) {
                 <div style={styles.passGrid2}>
                   <div>
                     <span style={styles.passLabel}>CUSTOMER NAME</span>
-                    <span style={styles.passValue}>{createdBooking.customerName}</span>
+                    <span style={styles.passValue}>{createdBooking?.customerName}</span>
                   </div>
                   <div>
                     <span style={styles.passLabel}>PAYMENT</span>
-                    <span style={styles.passValue}>{createdBooking.paymentMethod} (Paid)</span>
+                    <span style={styles.passValue}>{createdBooking?.paymentMethod} (Paid)</span>
                   </div>
                 </div>
               </div>
@@ -656,19 +675,19 @@ export default function BookingModal({ isOpen, onClose }) {
                 <h5 style={styles.receiptHeader}><Receipt size={12} /> Charges Breakdown</h5>
                 <div style={styles.receiptLine}>
                   <span>Court Base Fee (₱450/hr)</span>
-                  <span>₱{createdBooking.rates.basePrice.toFixed(2)}</span>
+                  <span>₱{createdBooking?.rates?.basePrice?.toFixed(2)}</span>
                 </div>
-                {createdBooking.rates.addonsCost > 0 && (
+                {createdBooking?.rates?.addonsCost > 0 && (
                   <div style={styles.receiptLine}>
                     <span>Gear Rentals Addon</span>
-                    <span>+₱{createdBooking.rates.addonsCost.toFixed(2)}</span>
+                    <span>+₱{createdBooking?.rates?.addonsCost?.toFixed(2)}</span>
                   </div>
                 )}
 
                 <div style={styles.receiptTotalLine}>
                   <span>Total Amount Paid</span>
                   <span style={{ color: '#ccff00', fontSize: '1.05rem' }}>
-                    ₱{createdBooking.rates.total.toFixed(2)}
+                    ₱{createdBooking?.rates?.total?.toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -689,7 +708,7 @@ export default function BookingModal({ isOpen, onClose }) {
                       ))}
                     </div>
                   </div>
-                  <span style={styles.barcodeText}>{createdBooking.id}</span>
+                  <span style={styles.barcodeText}>{createdBooking?.id}</span>
                 </div>
               </div>
             </div>

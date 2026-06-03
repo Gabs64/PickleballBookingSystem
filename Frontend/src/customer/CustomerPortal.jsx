@@ -10,8 +10,13 @@ export default function CustomerPortal() {
 
   // Auth states
   const [loggedCustomer, setLoggedCustomer] = useState(() => {
-    const saved = sessionStorage.getItem('customer_user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = sessionStorage.getItem('customer_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      console.error('Error parsing customer user session:', e);
+      return null;
+    }
   });
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login'); // 'login', 'register', 'verify'
@@ -427,10 +432,12 @@ export default function CustomerPortal() {
         </div>
       </section>
 
-      <BookingModal
-        isOpen={isBookingOpen}
-        onClose={() => setIsBookingOpen(false)}
-      />
+      {isBookingOpen && (
+        <BookingModal
+          isOpen={isBookingOpen}
+          onClose={() => setIsBookingOpen(false)}
+        />
+      )}
 
       {/* AUTHENTICATION MODAL */}
       {isAuthModalOpen && (
