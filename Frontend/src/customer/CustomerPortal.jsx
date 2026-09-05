@@ -312,16 +312,24 @@ export default function CustomerPortal() {
           <a href="#home" onClick={(e) => handleNav(e, 'home')} style={styles.navLink}>Home</a>
           <a href="#gallery" onClick={(e) => handleNav(e, 'gallery')} style={styles.navLink}>Gallery</a>
           <a href="#about" onClick={(e) => handleNav(e, 'about')} style={styles.navLink}>About</a>
-          {loggedCustomer ? (
-            <div style={styles.headerProfileBadge} title="Authenticated Customer">
-              <span style={styles.headerProfileName}>{loggedCustomer.name}</span>
-              <button onClick={handleLogout} style={styles.headerLogoutBtn}>Log Out</button>
-            </div>
-          ) : (
-            <button onClick={() => { setAuthMode('login'); setIsAuthModalOpen(true); }} style={styles.headerLoginBtn}>
-              Sign In
-            </button>
-          )}
+          {(() => {
+            const activeCustomer = loggedCustomer || (isLoginBypassed ? { id: 'USR-CUSTOMER-BYPASS', name: 'Jane Smith', email: 'jane.smith@gmail.com', phone: '0917-888-2938', role: 'Customer' } : null);
+            return activeCustomer ? (
+              <div style={styles.headerProfileBadge} title="Authenticated Customer">
+                <span style={styles.headerProfileName}>{activeCustomer.name}</span>
+                {isLoginBypassed && (
+                  <span style={{ fontSize: '0.65rem', background: 'rgba(204, 255, 0, 0.12)', border: '1px solid rgba(204, 255, 0, 0.3)', color: '#ccff00', padding: '0.2rem 0.5rem', borderRadius: '12px', marginLeft: '6px', fontWeight: 600 }}>
+                    🔓 Login Bypassed
+                  </span>
+                )}
+                {!isLoginBypassed && <button onClick={handleLogout} style={styles.headerLogoutBtn}>Log Out</button>}
+              </div>
+            ) : (
+              <button onClick={() => { setAuthMode('login'); setIsAuthModalOpen(true); }} style={styles.headerLoginBtn}>
+                Sign In
+              </button>
+            );
+          })()}
         </nav>
       </header>
 

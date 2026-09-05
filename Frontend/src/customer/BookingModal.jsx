@@ -4,7 +4,7 @@ import { X, CalendarDays, Clock, User, Phone, CheckCircle, ShoppingBag, Receipt,
 import Badge from '../components/Badge';
 
 export default function BookingModal({ isOpen, onClose }) {
-  const { courts, operatingHours, gearRates, checkAvailability, calculateRates, addBooking, getRelativeDateString } = useBooking();
+  const { courts, operatingHours, gearRates, checkAvailability, calculateRates, addBooking, getRelativeDateString, isLoginBypassed } = useBooking();
 
   const [bookingState, setBookingState] = useState('form'); // 'form', 'payment_scan', 'ticket'
   const [paymentTimer, setPaymentTimer] = useState(300); // 5 minutes in seconds
@@ -36,19 +36,19 @@ export default function BookingModal({ isOpen, onClose }) {
       setCreatedBooking(null);
       setPaymentTimer(300);
 
-      // PREFILL CUSTOMER INFO IF LOGGED IN
+      // PREFILL CUSTOMER INFO IF LOGGED IN OR BYPASSED
       const savedUser = sessionStorage.getItem('customer_user');
+      let activeUser = null;
       if (savedUser) {
-        try {
-          const userObj = JSON.parse(savedUser);
-          if (userObj) {
-            setCustomerName(userObj.name || '');
-            setCustomerEmail(userObj.email || '');
-            setCustomerPhone(userObj.phone || '');
-          }
-        } catch (e) {
-          console.error('Error parsing customer user in BookingModal:', e);
-        }
+        try { activeUser = JSON.parse(savedUser); } catch (e) {}
+      }
+      if (!activeUser && isLoginBypassed) {
+        activeUser = { name: 'Jane Smith', email: 'jane.smith@gmail.com', phone: '0917-888-2938' };
+      }
+      if (activeUser) {
+        setCustomerName(activeUser.name || '');
+        setCustomerEmail(activeUser.email || '');
+        setCustomerPhone(activeUser.phone || '');
       } else {
         setCustomerName('');
         setCustomerPhone('');
