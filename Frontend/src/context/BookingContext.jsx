@@ -231,7 +231,7 @@ export const BookingProvider = ({ children }) => {
 
   // --- USER ACCOUNT SYSTEM ---
   const [users, setUsers] = useState([]);
-  const [isLoginDisabled, setIsLoginDisabled] = useState(true); // Temporarily disable logins across all screens
+  const [isLoginBypassed, setIsLoginBypassed] = useState(true); // Temporarily bypass login authentication
 
   useEffect(() => {
     const storedUsers = localStorage.getItem('pickleball_users');
@@ -293,8 +293,12 @@ export const BookingProvider = ({ children }) => {
   };
 
   const authenticateUser = (email, password, role) => {
-    if (isLoginDisabled) {
-      return { success: false, message: 'Account logins are temporarily disabled across all screens.' };
+    if (isLoginBypassed) {
+      const matched = users.find(u => u.role === role);
+      return { 
+        success: true, 
+        user: matched || { id: 'USR-BYPASS', name: `${role} Operator`, email: `${role.toLowerCase()}@netrally.com`, role } 
+      };
     }
     const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
     if (!user) {
@@ -447,8 +451,8 @@ export const BookingProvider = ({ children }) => {
         users,
         addUser,
         authenticateUser,
-        isLoginDisabled,
-        setIsLoginDisabled
+        isLoginBypassed,
+        setIsLoginBypassed
       }}
     >
       {children}

@@ -8,7 +8,7 @@ import { LayoutDashboard, TableProperties, BarChart3, PlusCircle, Bell, UserSqua
 import { useBooking } from '../context/BookingContext';
 
 export default function CashierPortal() {
-  const { bookings, getRelativeDateString, authenticateUser, isLoginDisabled } = useBooking();
+  const { bookings, getRelativeDateString, authenticateUser, isLoginBypassed } = useBooking();
   
   // Auth state
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -66,7 +66,7 @@ export default function CashierPortal() {
     setIsWalkinOpen(true);
   };
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn && !isLoginBypassed) {
     return (
       <div style={styles.loginLayout}>
         <div style={styles.glowBg1}></div>
@@ -225,14 +225,19 @@ export default function CashierPortal() {
           </div>
 
           <div style={styles.headerRight}>
+            {isLoginBypassed && (
+              <span style={{ fontSize: '0.7rem', background: 'rgba(204, 255, 0, 0.1)', border: '1px solid rgba(204, 255, 0, 0.25)', color: '#ccff00', padding: '0.25rem 0.6rem', borderRadius: '20px', fontWeight: 600 }}>
+                🔓 Login Bypassed
+              </span>
+            )}
             <div style={styles.alertBell} title="System Alerts">
               <Bell size={18} />
               {(todayActiveCount > 0 || todayPendingPay > 0) && <span style={styles.bellDot}></span>}
             </div>
             <div style={{ ...styles.profileBadge, cursor: 'pointer' }} onClick={handleLogout} title="Click to Logout">
               <UserSquare2 size={20} color="var(--accent-neon)" />
-              <span style={styles.cashierName}>{loggedUser?.name || 'Alliah'}</span>
-              <span style={{ fontSize: '0.65rem', color: '#f87171', marginLeft: '6px', fontWeight: 600 }}>(Logout)</span>
+              <span style={styles.cashierName}>{loggedUser?.name || 'Alliah (Operator)'}</span>
+              {!isLoginBypassed && <span style={{ fontSize: '0.65rem', color: '#f87171', marginLeft: '6px', fontWeight: 600 }}>(Logout)</span>}
             </div>
           </div>
         </header>

@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 export default function AdminPortal() {
-  const { bookings, users, addUser, authenticateUser, isLoginDisabled } = useBooking();
+  const { bookings, users, addUser, authenticateUser, isLoginBypassed } = useBooking();
 
   // Authentication state
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -153,7 +153,7 @@ export default function AdminPortal() {
   };
 
   // Gating check
-  if (!isLoggedIn) {
+  if (!isLoggedIn && !isLoginBypassed) {
     return (
       <div style={styles.loginLayout}>
         <div style={styles.glowBg1}></div>
@@ -314,10 +314,15 @@ export default function AdminPortal() {
           </div>
 
           <div style={styles.headerRight}>
+            {isLoginBypassed && (
+              <span style={{ fontSize: '0.7rem', background: 'rgba(192, 132, 252, 0.1)', border: '1px solid rgba(192, 132, 252, 0.25)', color: '#c084fc', padding: '0.25rem 0.6rem', borderRadius: '20px', fontWeight: 600 }}>
+                🔓 Login Bypassed
+              </span>
+            )}
             <div style={{ ...styles.profileBadge, cursor: 'pointer' }} onClick={handleLogout} title="Sign Out">
               <UserSquare2 size={20} color="#c084fc" />
               <span style={styles.adminName}>{loggedAdmin?.name || 'System Admin'}</span>
-              <span style={{ fontSize: '0.65rem', color: '#f87171', marginLeft: '6px', fontWeight: 600 }}>(Log out)</span>
+              {!isLoginBypassed && <span style={{ fontSize: '0.65rem', color: '#f87171', marginLeft: '6px', fontWeight: 600 }}>(Log out)</span>}
             </div>
           </div>
         </header>
