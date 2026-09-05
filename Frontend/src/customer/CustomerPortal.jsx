@@ -5,7 +5,7 @@ import { useBooking } from '../context/BookingContext';
 import { Sparkles, MessageCircle, Send, X, HelpCircle, Activity, Camera, BookOpen, Check, UserCheck, ShieldAlert, Mail } from 'lucide-react';
 
 export default function CustomerPortal() {
-  const { users, addUser, authenticateUser } = useBooking();
+  const { users, addUser, authenticateUser, isLoginDisabled } = useBooking();
   const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   // Auth states
@@ -464,6 +464,11 @@ export default function CustomerPortal() {
 
             {authMode === 'login' && (
               <form onSubmit={handleLoginSubmit} style={styles.authForm}>
+                {isLoginDisabled && (
+                  <div style={styles.errorAlert}>
+                    <span>⚠️ Notice: Account logins are temporarily disabled across all screens.</span>
+                  </div>
+                )}
                 <div className="form-group">
                   <label className="form-label" htmlFor="auth-email">Email Address</label>
                   <input
@@ -473,6 +478,7 @@ export default function CustomerPortal() {
                     placeholder="jane.smith@gmail.com"
                     value={authEmail}
                     onChange={(e) => setAuthEmail(e.target.value)}
+                    disabled={isLoginDisabled}
                     required
                   />
                 </div>
@@ -485,11 +491,12 @@ export default function CustomerPortal() {
                     placeholder="••••••••"
                     value={authPassword}
                     onChange={(e) => setAuthPassword(e.target.value)}
+                    disabled={isLoginDisabled}
                     required
                   />
                 </div>
-                <button type="submit" className="btn btn-primary" style={styles.authBtn}>
-                  Log In
+                <button type="submit" className="btn btn-primary" style={{ ...styles.authBtn, ...(isLoginDisabled ? { opacity: 0.5, cursor: 'not-allowed' } : {}) }} disabled={isLoginDisabled}>
+                  {isLoginDisabled ? 'Logins Disabled' : 'Log In'}
                 </button>
                 <p style={styles.toggleText}>
                   Don't have an account?{' '}

@@ -8,7 +8,7 @@ import { LayoutDashboard, TableProperties, BarChart3, PlusCircle, Bell, UserSqua
 import { useBooking } from '../context/BookingContext';
 
 export default function CashierPortal() {
-  const { bookings, getRelativeDateString, authenticateUser } = useBooking();
+  const { bookings, getRelativeDateString, authenticateUser, isLoginDisabled } = useBooking();
   
   // Auth state
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -81,7 +81,13 @@ export default function CashierPortal() {
             <p style={styles.loginSubtitle}>Access is restricted to pickleball reception personnel.</p>
           </div>
 
-          {loginError && (
+          {isLoginDisabled && (
+            <div style={styles.errorAlert}>
+              <span>⚠️ Notice: Account logins are temporarily disabled across all screens.</span>
+            </div>
+          )}
+
+          {loginError && !isLoginDisabled && (
             <div style={styles.errorAlert}>
               <span>⚠️ {loginError}</span>
             </div>
@@ -97,6 +103,7 @@ export default function CashierPortal() {
                 placeholder="operator@netrally.com"
                 value={emailInput}
                 onChange={(e) => setEmailInput(e.target.value)}
+                disabled={isLoginDisabled}
                 required
                 style={{ background: 'rgba(9, 10, 15, 0.7)' }}
               />
@@ -111,13 +118,14 @@ export default function CashierPortal() {
                 placeholder="••••••••"
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
+                disabled={isLoginDisabled}
                 required
                 style={{ background: 'rgba(9, 10, 15, 0.7)' }}
               />
             </div>
 
-            <button type="submit" className="btn btn-primary" style={styles.loginBtn}>
-              Sign In to Terminal
+            <button type="submit" className="btn btn-primary" style={{ ...styles.loginBtn, ...(isLoginDisabled ? { opacity: 0.5, cursor: 'not-allowed' } : {}) }} disabled={isLoginDisabled}>
+              {isLoginDisabled ? 'Logins Disabled' : 'Sign In to Terminal'}
             </button>
           </form>
           

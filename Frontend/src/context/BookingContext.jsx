@@ -231,6 +231,7 @@ export const BookingProvider = ({ children }) => {
 
   // --- USER ACCOUNT SYSTEM ---
   const [users, setUsers] = useState([]);
+  const [isLoginDisabled, setIsLoginDisabled] = useState(true); // Temporarily disable logins across all screens
 
   useEffect(() => {
     const storedUsers = localStorage.getItem('pickleball_users');
@@ -292,6 +293,9 @@ export const BookingProvider = ({ children }) => {
   };
 
   const authenticateUser = (email, password, role) => {
+    if (isLoginDisabled) {
+      return { success: false, message: 'Account logins are temporarily disabled across all screens.' };
+    }
     const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
     if (!user) {
       return { success: false, message: 'Invalid email address.' };
@@ -442,7 +446,9 @@ export const BookingProvider = ({ children }) => {
         getRelativeDateString,
         users,
         addUser,
-        authenticateUser
+        authenticateUser,
+        isLoginDisabled,
+        setIsLoginDisabled
       }}
     >
       {children}

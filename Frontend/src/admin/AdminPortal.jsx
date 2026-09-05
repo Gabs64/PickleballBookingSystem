@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 export default function AdminPortal() {
-  const { bookings, users, addUser, authenticateUser } = useBooking();
+  const { bookings, users, addUser, authenticateUser, isLoginDisabled } = useBooking();
 
   // Authentication state
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -168,7 +168,13 @@ export default function AdminPortal() {
             <p style={styles.loginSubtitle}>Access is strictly restricted to authorized system administrators.</p>
           </div>
 
-          {loginError && (
+          {isLoginDisabled && (
+            <div style={styles.errorAlert}>
+              <span>⚠️ Notice: Account logins are temporarily disabled across all screens.</span>
+            </div>
+          )}
+
+          {loginError && !isLoginDisabled && (
             <div style={styles.errorAlert}>
               <span>⚠️ {loginError}</span>
             </div>
@@ -184,6 +190,7 @@ export default function AdminPortal() {
                 placeholder="admin@netrally.com"
                 value={emailInput}
                 onChange={(e) => setEmailInput(e.target.value)}
+                disabled={isLoginDisabled}
                 required
                 style={{ background: 'rgba(9, 10, 15, 0.7)' }}
               />
@@ -198,13 +205,14 @@ export default function AdminPortal() {
                 placeholder="••••••••"
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
+                disabled={isLoginDisabled}
                 required
                 style={{ background: 'rgba(9, 10, 15, 0.7)' }}
               />
             </div>
 
-            <button type="submit" className="btn btn-primary" style={styles.loginBtn}>
-              Gain Console Access
+            <button type="submit" className="btn btn-primary" style={{ ...styles.loginBtn, ...(isLoginDisabled ? { opacity: 0.5, cursor: 'not-allowed' } : {}) }} disabled={isLoginDisabled}>
+              {isLoginDisabled ? 'Logins Disabled' : 'Gain Console Access'}
             </button>
           </form>
           
