@@ -39,7 +39,7 @@ export default function CustomerPortal() {
   // Chatbot widget states
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { id: 1, sender: 'bot', text: "Welcome to NetRally! 🏓 How can I assist you with your court rentals today?" }
+    { id: 1, sender: 'bot', text: "Welcome to <BrandName>! 🏓 How can I assist you with your court rentals today?" }
   ]);
   const [inputText, setInputText] = useState('');
 
@@ -294,7 +294,7 @@ export default function CustomerPortal() {
       } else if (userText.toLowerCase().includes('paddle') || userText.toLowerCase().includes('gear')) {
         reply = "Yes, we rent Carbon Pro paddles at ₱50.00/hr, can of 3 balls for ₱150.00, and ankle-protecting court shoes for ₱100.00 flat fee!";
       } else if (userText.toLowerCase().includes('cancel') || userText.toLowerCase().includes('refund')) {
-        reply = "NetRally Arena operates under a strict NO REFUND and NO CANCELLATION policy. Once a court reservation is paid and booked, the schedule is locked and cannot be altered, cancelled, or refunded.";
+        reply = "<BrandName> operates under a strict NO REFUND and NO CANCELLATION policy. Once a court reservation is paid and booked, the schedule is locked and cannot be altered, cancelled, or refunded.";
       }
       setMessages(prev => [...prev, { id: Date.now() + 2, sender: 'bot', text: reply }]);
     }, 800);
@@ -306,7 +306,7 @@ export default function CustomerPortal() {
       {/* PREMIUM STICKY HEADER */}
       <header style={styles.header}>
         <div style={styles.headerLeft}>
-          <span style={styles.headerLogo} className="animate-gradient-text">NetRally</span>
+          <span style={styles.headerLogo} className="animate-gradient-text">{"<BrandName>"}</span>
         </div>
         <nav style={styles.navMenu}>
           <a href="#home" onClick={(e) => handleNav(e, 'home')} style={styles.navLink}>Home</a>
@@ -691,7 +691,7 @@ export default function CustomerPortal() {
             </button>
           </div>
           <div style={styles.sandboxToastContent}>
-            <p style={{ color: '#94a3b8', fontSize: '0.75rem', fontWeight: 600 }}>FROM: <span style={{ color: '#00f0ff' }}>verification@netrally.com</span></p>
+            <p style={{ color: '#94a3b8', fontSize: '0.75rem', fontWeight: 600 }}>FROM: <span style={{ color: '#00f0ff' }}>verification@domain.com</span></p>
             <p style={{ color: '#94a3b8', fontSize: '0.75rem', fontWeight: 600 }}>TO: <span style={{ color: '#cbd5e1' }}>{authEmail}</span></p>
             <div style={styles.sandboxCodeDivider}></div>
             <p style={styles.sandboxMailTitle}>🏓 Verify Your Pickleball Account</p>
@@ -710,7 +710,7 @@ export default function CustomerPortal() {
 
       {/* FOOTER */}
       <footer style={styles.footer}>
-        <p>© 2026 NetRally Arena. All rights reserved.</p>
+        <p>© 2026 {"<BrandName>"}. All rights reserved.</p>
       </footer>
 
     </div>

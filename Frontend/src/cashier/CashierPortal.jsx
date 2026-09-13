@@ -144,7 +144,7 @@ export default function CashierPortal() {
       <aside style={styles.sidebar}>
         <div style={styles.sidebarBranding}>
           <div>
-            <h3 style={styles.brandTitle}>NetRally Terminal</h3>
+            <h3 style={styles.brandTitle}>{"<BrandName> Terminal"}</h3>
             <span style={styles.brandRole}>CASHIER CONSOLE</span>
           </div>
         </div>
@@ -209,7 +209,7 @@ export default function CashierPortal() {
           >
             Terminal Logout
           </button>
-          <span style={styles.serverStatus}>NetRally Reception</span>
+          <span style={styles.serverStatus}>{"<BrandName> Reception"}</span>
         </div>
       </aside>
 

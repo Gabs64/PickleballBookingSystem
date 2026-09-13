@@ -13,7 +13,7 @@ export default function HeroSection({ onStartBooking }) {
         </div>
         
         <h1 style={styles.headline} className="animate-gradient-text">
-          NetRally
+          {"<BrandName>"}
         </h1>
         <h2 style={styles.subHeadline}>
           BOOK YOUR COURT IN SECONDS

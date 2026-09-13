@@ -49,7 +49,7 @@ export default function AdminPortal() {
   const [smtpSecure, setSmtpSecure] = useState('false');
   const [smtpUser, setSmtpUser] = useState('');
   const [smtpPass, setSmtpPass] = useState('');
-  const [smtpSenderName, setSmtpSenderName] = useState('NetRally Arena');
+  const [smtpSenderName, setSmtpSenderName] = useState('<BrandName>');
   const [settingsSuccess, setSettingsSuccess] = useState('');
 
   // Hydrate settings
@@ -62,7 +62,7 @@ export default function AdminPortal() {
       setSmtpSecure(config.secure === true ? 'true' : 'false');
       setSmtpUser(config.auth?.user || '');
       setSmtpPass(config.auth?.pass || '');
-      setSmtpSenderName(config.senderName || 'NetRally Arena');
+      setSmtpSenderName(config.senderName || '<BrandName>');
     }
   }, []);
 
@@ -90,7 +90,7 @@ export default function AdminPortal() {
     setSmtpSecure('false');
     setSmtpUser('');
     setSmtpPass('');
-    setSmtpSenderName('NetRally Arena');
+    setSmtpSenderName('<BrandName>');
     setSettingsSuccess('SMTP configurations successfully cleared! Reverted to sandbox fallback.');
   };
 
@@ -298,7 +298,7 @@ export default function AdminPortal() {
           >
             Log Out
           </button>
-          <span style={styles.serverStatus}>NetRally Admin</span>
+          <span style={styles.serverStatus}>{"<BrandName> Admin"}</span>
         </div>
       </aside>
 
@@ -394,7 +394,7 @@ export default function AdminPortal() {
             <div className="glass-card" style={styles.contentBlock}>
               <h3 style={styles.blockTitle}>System Overview</h3>
               <p style={styles.blockDesc}>
-                Overview of user accounts, total court reservations, and cashier operators registered in the NetRally system.
+                Overview of user accounts, total court reservations, and cashier operators registered in the system.
               </p>
               
               <div style={styles.diagnosticsGrid}>
@@ -641,7 +641,7 @@ export default function AdminPortal() {
                     id="smtp-sender"
                     type="text"
                     className="form-control"
-                    placeholder="NetRally Arena"
+                    placeholder="<BrandName>"
                     value={smtpSenderName}
                     onChange={(e) => setSmtpSenderName(e.target.value)}
                   />

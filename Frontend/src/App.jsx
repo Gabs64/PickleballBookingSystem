@@ -64,7 +64,7 @@ function AppContent() {
         <div style={styles.logoBadge}>
           <span>PICKLEBALL BOOKING SYSTEM</span>
         </div>
-        <h1 style={styles.mainTitle}>NetRally</h1>
+        <h1 style={styles.mainTitle}>{"<BrandName>"}</h1>
         <p style={styles.subtitle}>Pickleball Court Reservation & Reception Management System</p>
       </div>
 
@@ -172,7 +172,7 @@ function AppContent() {
 
       {/* Selector footer info */}
       <footer style={styles.footer}>
-        <p>© 2026 NetRally Arena. All rights reserved.</p>
+        <p>© 2026 {"<BrandName>"}. All rights reserved.</p>
       </footer>
     </div>
   );

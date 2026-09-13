@@ -471,7 +471,7 @@ export default function BookingModal({ isOpen, onClose }) {
                   ? 'linear-gradient(90deg, #0056B3 0%, #007BFF 100%)' 
                   : 'linear-gradient(90deg, #FF6F00 0%, #FF8F00 100%)'
               }}>
-                <span style={styles.scannerMerchant}>MERCHANT: NETRALLY ARENA</span>
+                <span style={styles.scannerMerchant}>MERCHANT: {"<BrandName>"}</span>
                 <h4 style={styles.scannerMethod}>{paymentMethod} Secure Gateway</h4>
               </div>
 
@@ -610,7 +610,7 @@ export default function BookingModal({ isOpen, onClose }) {
             <div style={styles.passContainer}>
               <div style={styles.passHeader}>
                 <div>
-                  <h4 style={styles.passBrand}>NetRally</h4>
+                  <h4 style={styles.passBrand}>{"<BrandName>"}</h4>
                   <p style={styles.passSub}>Pickleball Court Reservation Pass</p>
                 </div>
                 <div>
