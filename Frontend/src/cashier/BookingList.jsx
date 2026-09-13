@@ -174,49 +174,47 @@ export default function BookingList() {
                     </td>
                     <td style={styles.tdActions}>
                       <div style={styles.actionRow}>
-                        <button 
-                          onClick={() => setInspectedBooking(b)} 
-                          style={styles.iconActionBtn}
-                          className="btn btn-secondary btn-sm"
-                          title="View Details"
-                        >
-                          <Eye size={12} />
-                        </button>
-
                         {b.status === 'Pending' && (
                           <button 
                             onClick={() => handleAction(b.id, 'Paid')} 
-                            style={{ ...styles.iconActionBtn, color: '#10b981', background: 'rgba(16, 185, 129, 0.1)' }}
-                            className="btn btn-secondary btn-sm"
+                            style={{ color: '#fff', background: '#10b981', fontWeight: 700, padding: '0.35rem 0.65rem' }}
+                            className="btn btn-sm"
                             title="Mark Paid"
                           >
-                            <DollarSign size={12} />
+                            <DollarSign size={12} /> Pay
                           </button>
                         )}
 
                         {b.status === 'Paid' && (
                           <button 
                             onClick={() => handleAction(b.id, 'Checked-In')} 
-                            style={{ ...styles.iconActionBtn, color: '#00f0ff', background: 'rgba(0, 240, 255, 0.1)' }}
-                            className="btn btn-secondary btn-sm"
+                            style={{ color: '#090a0f', background: '#00f0ff', fontWeight: 750, padding: '0.35rem 0.65rem' }}
+                            className="btn btn-sm"
                             title="Check In Players"
                           >
-                            <Play size={12} />
+                            <Play size={12} /> Check In
                           </button>
                         )}
 
                         {b.status === 'Checked-In' && (
                           <button 
                             onClick={() => handleAction(b.id, 'Completed')} 
-                            style={{ ...styles.iconActionBtn, color: '#c084fc', background: 'rgba(192, 132, 252, 0.1)' }}
-                            className="btn btn-secondary btn-sm"
+                            style={{ color: '#fff', background: '#c084fc', fontWeight: 700, padding: '0.35rem 0.65rem' }}
+                            className="btn btn-sm"
                             title="Mark Completed"
                           >
-                            <Check size={12} />
+                            <Check size={12} /> Complete
                           </button>
                         )}
 
-                        {/* Cancellation button untracked in compliance with strict No-Refund & No-Cancellation policy */}
+                        <button 
+                          onClick={() => setInspectedBooking(b)} 
+                          style={{ padding: '0.35rem 0.6rem' }}
+                          className="btn btn-secondary btn-sm"
+                          title="View Details"
+                        >
+                          <Eye size={12} /> View
+                        </button>
                       </div>
                     </td>
                   </tr>

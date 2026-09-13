@@ -326,7 +326,7 @@ const styles = {
   },
   drawerContainer: {
     width: '100%',
-    maxWidth: '460px',
+    maxWidth: '560px',
     height: '100vh',
     borderRadius: '16px 0 0 16px',
     border: 'none',
@@ -413,7 +413,7 @@ const styles = {
   },
   slotsWrapper: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
+    gridTemplateColumns: 'repeat(4, 1fr)',
     gap: '0.5rem',
     marginBottom: '1rem',
   },

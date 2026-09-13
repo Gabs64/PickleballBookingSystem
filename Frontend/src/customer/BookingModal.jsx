@@ -229,154 +229,157 @@ export default function BookingModal({ isOpen, onClose }) {
         {bookingState === 'form' ? (
           // RENDER BOOKING FORM PANEL
           <form onSubmit={handlePayAndConfirm} style={styles.form}>
-            <div style={styles.scrollContent}>
+            <div style={styles.twoColumnWrapper}>
               
-              <div style={styles.formRow2}>
-                {/* Court picker Dropdown */}
-                <div className="form-group" style={{ flex: 1.2 }}>
-                  <label className="form-label">Select Court</label>
-                  <select
-                    value={courtId}
-                    onChange={(e) => setCourtId(e.target.value)}
-                    className="form-control"
-                    style={styles.selectDropbox}
-                  >
-                    {courts.map(c => (
-                      <option key={c.id} value={c.id}>
-                        {c.name} ({c.type} - ₱450.00/hr)
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Date Picker */}
-                <div className="form-group" style={{ flex: 0.8 }}>
-                  <label className="form-label">Select Date</label>
-                  <input
-                    type="date"
-                    min={getRelativeDateString(0)}
-                    value={bookingDate}
-                    onChange={(e) => setBookingDate(e.target.value)}
-                    className="form-control"
-                    style={{ height: '38px' }}
-                  />
-                </div>
-              </div>
-
-              {/* Time Slots Grid */}
-              <h4 style={styles.sectionHeader}><Clock size={13} /> Select Time Slots (6:00 AM - 10:00 PM)</h4>
-              <div style={styles.slotsGrid}>
-                {operatingHours.map(slot => {
-                  const isSelected = selectedSlots.includes(slot);
-                  const isReserved = !checkAvailability(courtId, bookingDate, [slot]).available;
-
-                  return (
-                    <button
-                      key={slot}
-                      type="button"
-                      disabled={isReserved}
-                      onClick={() => handleSlotToggle(slot)}
-                      style={{
-                        ...styles.slotBtn,
-                        ...(isSelected ? styles.slotSelected : {}),
-                        ...(isReserved ? styles.slotReserved : {})
-                      }}
+              {/* LEFT COLUMN: COURT, DATE, TIME SLOTS & GEAR */}
+              <div style={styles.leftCol}>
+                <div style={styles.formRow2}>
+                  {/* Court picker Dropdown */}
+                  <div className="form-group" style={{ flex: 1.2 }}>
+                    <label className="form-label">Select Court</label>
+                    <select
+                      value={courtId}
+                      onChange={(e) => setCourtId(e.target.value)}
+                      className="form-control"
+                      style={styles.selectDropbox}
                     >
-                      <span style={styles.slotText}>{slot.split(' - ')[0]}</span>
-                      <span style={styles.slotStatus}>
-                        {isReserved ? 'Booked' : isSelected ? 'Select' : 'Free'}
-                      </span>
+                      {courts.map(c => (
+                        <option key={c.id} value={c.id}>
+                          {c.name} ({c.type} - ₱450.00/hr)
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Date Picker */}
+                  <div className="form-group" style={{ flex: 0.8 }}>
+                    <label className="form-label">Select Date</label>
+                    <input
+                      type="date"
+                      min={getRelativeDateString(0)}
+                      value={bookingDate}
+                      onChange={(e) => setBookingDate(e.target.value)}
+                      className="form-control"
+                      style={{ height: '38px' }}
+                    />
+                  </div>
+                </div>
+
+                {/* Time Slots Grid */}
+                <h4 style={styles.sectionHeader}><Clock size={13} /> Select Time Slots (6:00 AM - 10:00 PM)</h4>
+                <div style={styles.slotsGrid}>
+                  {operatingHours.map(slot => {
+                    const isSelected = selectedSlots.includes(slot);
+                    const isReserved = !checkAvailability(courtId, bookingDate, [slot]).available;
+
+                    return (
+                      <button
+                        key={slot}
+                        type="button"
+                        disabled={isReserved}
+                        onClick={() => handleSlotToggle(slot)}
+                        style={{
+                          ...styles.slotBtn,
+                          ...(isSelected ? styles.slotSelected : {}),
+                          ...(isReserved ? styles.slotReserved : {})
+                        }}
+                      >
+                        <span style={styles.slotText}>{slot.split(' - ')[0]}</span>
+                        <span style={styles.slotStatus}>
+                          {isReserved ? 'Booked' : isSelected ? 'Selected' : 'Available'}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Gear Addons Inline Counter */}
+                <h4 style={styles.sectionHeader}><ShoppingBag size={13} /> Equipment Rental Add-ons</h4>
+                <div style={styles.gearRow}>
+                  {/* Paddles */}
+                  <div style={styles.gearInlineItem}>
+                    <div>
+                      <span style={styles.gearLabel}>Carbon Paddles</span>
+                      <span style={styles.gearPrice}>₱50 / hour</span>
+                    </div>
+                    <div style={styles.gearControls}>
+                      <button type="button" onClick={() => setAddons({ ...addons, paddles: Math.max(0, addons.paddles - 1) })} style={styles.qtyBtn} className="btn btn-secondary">-</button>
+                      <span style={styles.qtyVal}>{addons.paddles}</span>
+                      <button type="button" onClick={() => setAddons({ ...addons, paddles: Math.min(6, addons.paddles + 1) })} style={styles.qtyBtn} className="btn btn-secondary">+</button>
+                    </div>
+                  </div>
+
+                  {/* Shoes */}
+                  <div style={styles.gearInlineItem}>
+                    <div>
+                      <span style={styles.gearLabel}>Court Shoes</span>
+                      <span style={styles.gearPrice}>₱100 flat fee</span>
+                    </div>
+                    <div style={styles.gearControls}>
+                      <button type="button" onClick={() => setAddons({ ...addons, shoes: Math.max(0, addons.shoes - 1) })} style={styles.qtyBtn} className="btn btn-secondary">-</button>
+                      <span style={styles.qtyVal}>{addons.shoes}</span>
+                      <button type="button" onClick={() => setAddons({ ...addons, shoes: Math.min(6, addons.shoes + 1) })} style={styles.qtyBtn} className="btn btn-secondary">+</button>
+                    </div>
+                  </div>
+
+                  {/* Balls Toggle */}
+                  <div style={styles.gearInlineItem}>
+                    <div>
+                      <span style={styles.gearLabel}>Can of 3 Balls</span>
+                      <span style={styles.gearPrice}>₱150 flat fee</span>
+                    </div>
+                    <button 
+                      type="button"
+                      onClick={() => setAddons({ ...addons, balls: !addons.balls })}
+                      style={{
+                        ...styles.ballToggle,
+                        backgroundColor: addons.balls ? 'var(--accent-neon)' : 'transparent',
+                        color: addons.balls ? 'var(--text-inverse)' : '#fff',
+                        borderColor: addons.balls ? 'var(--accent-neon)' : 'var(--border-medium)'
+                      }}
+                      className="btn"
+                    >
+                      {addons.balls ? 'Added' : 'Add'}
                     </button>
-                  );
-                })}
-              </div>
-
-              {/* Gear Addons Inline Counter */}
-              <h4 style={styles.sectionHeader}><ShoppingBag size={13} /> Equipment Rental Add-ons</h4>
-              <div style={styles.gearRow}>
-                {/* Paddles */}
-                <div style={styles.gearInlineItem}>
-                  <div>
-                    <span style={styles.gearLabel}>Carbon Paddles</span>
-                    <span style={styles.gearPrice}>₱50 / hour</span>
                   </div>
-                  <div style={styles.gearControls}>
-                    <button type="button" onClick={() => setAddons({ ...addons, paddles: Math.max(0, addons.paddles - 1) })} style={styles.qtyBtn} className="btn btn-secondary">-</button>
-                    <span style={styles.qtyVal}>{addons.paddles}</span>
-                    <button type="button" onClick={() => setAddons({ ...addons, paddles: Math.min(6, addons.paddles + 1) })} style={styles.qtyBtn} className="btn btn-secondary">+</button>
-                  </div>
-                </div>
-
-                {/* Shoes */}
-                <div style={styles.gearInlineItem}>
-                  <div>
-                    <span style={styles.gearLabel}>Court Shoes</span>
-                    <span style={styles.gearPrice}>₱100 flat fee</span>
-                  </div>
-                  <div style={styles.gearControls}>
-                    <button type="button" onClick={() => setAddons({ ...addons, shoes: Math.max(0, addons.shoes - 1) })} style={styles.qtyBtn} className="btn btn-secondary">-</button>
-                    <span style={styles.qtyVal}>{addons.shoes}</span>
-                    <button type="button" onClick={() => setAddons({ ...addons, shoes: Math.min(6, addons.shoes + 1) })} style={styles.qtyBtn} className="btn btn-secondary">+</button>
-                  </div>
-                </div>
-
-                {/* Balls Toggle */}
-                <div style={styles.gearInlineItem}>
-                  <div>
-                    <span style={styles.gearLabel}>Can of 3 Balls</span>
-                    <span style={styles.gearPrice}>₱150 flat fee</span>
-                  </div>
-                  <button 
-                    type="button"
-                    onClick={() => setAddons({ ...addons, balls: !addons.balls })}
-                    style={{
-                      ...styles.ballToggle,
-                      backgroundColor: addons.balls ? 'var(--accent-neon)' : 'transparent',
-                      color: addons.balls ? 'var(--text-inverse)' : '#fff',
-                      borderColor: addons.balls ? 'var(--accent-neon)' : 'var(--border-medium)'
-                    }}
-                    className="btn"
-                  >
-                    {addons.balls ? 'Added' : 'Add'}
-                  </button>
                 </div>
               </div>
 
-              {/* Contact Information Form */}
-              <h4 style={styles.sectionHeader}><User size={13} /> Customer Contact Details</h4>
-              
-              {/* Logged in info banner */}
-              {(() => {
-                try {
-                  const saved = sessionStorage.getItem('customer_user');
-                  if (saved) {
-                    const userObj = JSON.parse(saved);
-                    if (userObj && userObj.name) {
-                      return (
-                        <div style={styles.authBanner}>
-                          <CheckCircle size={14} color="var(--accent-neon)" style={{ marginRight: '6px' }} />
-                          <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>
-                            Authenticated Profile: <strong style={{ color: '#fff' }}>{userObj.name}</strong> (Verified ✅)
-                          </span>
-                        </div>
-                      );
+              {/* RIGHT COLUMN: CONTACT DETAILS, PAYMENT & SUMMARY */}
+              <div style={styles.rightCol}>
+                <h4 style={{ ...styles.sectionHeader, marginTop: 0 }}><User size={13} /> Customer Details</h4>
+                
+                {/* Logged in info banner */}
+                {(() => {
+                  try {
+                    const saved = sessionStorage.getItem('customer_user');
+                    if (saved) {
+                      const userObj = JSON.parse(saved);
+                      if (userObj && userObj.name) {
+                        return (
+                          <div style={styles.authBanner}>
+                            <CheckCircle size={14} color="var(--accent-neon)" style={{ marginRight: '6px' }} />
+                            <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>
+                              Logged In: <strong style={{ color: '#fff' }}>{userObj.name}</strong>
+                            </span>
+                          </div>
+                        );
+                      }
                     }
+                  } catch (e) {
+                    console.error('Error parsing customer user in AuthBanner:', e);
                   }
-                } catch (e) {
-                  console.error('Error parsing customer user in AuthBanner:', e);
-                }
-                return (
-                  <div style={styles.authBannerPrompt}>
-                    <HelpCircle size={14} color="#00f0ff" style={{ marginRight: '6px' }} />
-                    <span style={{ fontSize: '0.75rem', fontWeight: 500, color: '#94a3b8' }}>
-                      Want faster booking? Sign up/Login on the landing page to auto-fill your contact details.
-                    </span>
-                  </div>
-                );
-              })()}
+                  return (
+                    <div style={styles.authBannerPrompt}>
+                      <HelpCircle size={14} color="#00f0ff" style={{ marginRight: '6px' }} />
+                      <span style={{ fontSize: '0.7rem', fontWeight: 500, color: '#94a3b8' }}>
+                        Sign in on the home page to auto-fill details.
+                      </span>
+                    </div>
+                  );
+                })()}
 
-              <div style={styles.formRow3}>
-                <div className="form-group" style={{ flex: 1 }}>
+                <div className="form-group">
                   <label className="form-label">Full Name <span style={{ color: 'red' }}>*</span></label>
                   <input
                     type="text"
@@ -387,7 +390,7 @@ export default function BookingModal({ isOpen, onClose }) {
                     required
                   />
                 </div>
-                <div className="form-group" style={{ flex: 1 }}>
+                <div className="form-group">
                   <label className="form-label">Email Address <span style={{ color: 'red' }}>*</span></label>
                   <input
                     type="email"
@@ -398,7 +401,7 @@ export default function BookingModal({ isOpen, onClose }) {
                     required
                   />
                 </div>
-                <div className="form-group" style={{ flex: 1 }}>
+                <div className="form-group">
                   <label className="form-label">Phone Number <span style={{ color: 'red' }}>*</span></label>
                   <input
                     type="tel"
@@ -409,15 +412,10 @@ export default function BookingModal({ isOpen, onClose }) {
                     required
                   />
                 </div>
-              </div>
 
-
-
-              {/* Payment System Section */}
-              <h4 style={styles.sectionHeader}><CreditCard size={13} /> Payment Method</h4>
-              <div style={styles.formRow2}>
-                <div className="form-group" style={{ flex: 1 }}>
-                  <label className="form-label">Select Payment</label>
+                {/* Payment Channel */}
+                <h4 style={styles.sectionHeader}><CreditCard size={13} /> Payment Method</h4>
+                <div className="form-group">
                   <select
                     value={paymentMethod}
                     onChange={(e) => setPaymentMethod(e.target.value)}
@@ -430,33 +428,36 @@ export default function BookingModal({ isOpen, onClose }) {
                   </select>
                 </div>
 
-                <div style={styles.runningTotalBox}>
-                  <span style={styles.runningTotalLabel}>TOTAL AMOUNT DUE:</span>
-                  <span style={styles.runningTotalVal}>
-                    ₱{liveRates ? liveRates.total.toFixed(2) : '0.00'}
-                  </span>
+                {/* Order Summary & Submit Bar */}
+                <div style={styles.orderSummaryCard} className="glass-card">
+                  <div style={styles.summaryLine}>
+                    <span>Court Base ({selectedSlots.length} hrs):</span>
+                    <span>₱{liveRates ? liveRates.basePrice.toFixed(2) : '0.00'}</span>
+                  </div>
+                  {liveRates && liveRates.addonsCost > 0 && (
+                    <div style={styles.summaryLine}>
+                      <span>Equipment Add-ons:</span>
+                      <span>+₱{liveRates.addonsCost.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div style={styles.summaryTotalLine}>
+                    <span>TOTAL:</span>
+                    <span style={styles.runningTotalVal}>
+                      ₱{liveRates ? liveRates.total.toFixed(2) : '0.00'}
+                    </span>
+                  </div>
+                </div>
+
+                <div style={{ ...styles.btnRow, marginTop: '1.25rem' }}>
+                  <button type="button" onClick={onClose} className="btn btn-secondary" style={{ flex: 1 }}>
+                    Cancel
+                  </button>
+                  <button type="submit" className="btn btn-primary" style={{ ...styles.payBtn, flex: 2 }}>
+                    Confirm & Pay ₱{liveRates ? liveRates.total.toFixed(2) : '0.00'}
+                  </button>
                 </div>
               </div>
 
-            </div>
-
-            {/* Submit Action Bar */}
-            <div style={styles.footerBar}>
-              <div style={styles.priceBreakdownInline}>
-                {liveRates && (
-                  <span style={styles.subtextBreakdown}>
-                    Base: ₱{liveRates.basePrice} | Addons: ₱{liveRates.addonsCost}
-                  </span>
-                )}
-              </div>
-              <div style={styles.btnRow}>
-                <button type="button" onClick={onClose} className="btn btn-secondary">
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-primary" style={styles.payBtn}>
-                  Confirm & Pay ₱{liveRates ? liveRates.total.toFixed(2) : '0.00'}
-                </button>
-              </div>
             </div>
           </form>
         ) : bookingState === 'payment_scan' ? (
@@ -747,14 +748,15 @@ const styles = {
   },
   popupFormContainer: {
     width: '100%',
-    maxWidth: '750px',
+    maxWidth: '980px',
     display: 'flex',
     flexDirection: 'column',
-    maxHeight: '92vh',
-    padding: '1.5rem',
+    maxHeight: '94vh',
+    padding: '1.75rem',
     border: '1px solid rgba(255, 255, 255, 0.08)',
     boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6)',
-    background: 'rgba(15, 18, 30, 0.95)',
+    background: 'rgba(15, 18, 30, 0.96)',
+    overflowY: 'auto',
   },
   popupTicketContainer: {
     width: '100%',
@@ -773,10 +775,10 @@ const styles = {
     alignItems: 'center',
     borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
     paddingBottom: '0.75rem',
-    marginBottom: '1rem',
+    marginBottom: '1.25rem',
   },
   title: {
-    fontSize: '1.2rem',
+    fontSize: '1.3rem',
     fontWeight: 800,
     fontFamily: "'Outfit', sans-serif",
   },
@@ -803,11 +805,47 @@ const styles = {
     flexDirection: 'column',
     minHeight: 0,
   },
-  scrollContent: {
-    flex: 1,
-    overflowY: 'auto',
-    paddingRight: '6px',
-    marginBottom: '1.25rem',
+  twoColumnWrapper: {
+    display: 'grid',
+    gridTemplateColumns: '1.25fr 1fr',
+    gap: '1.75rem',
+    alignItems: 'start',
+  },
+  leftCol: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  rightCol: {
+    display: 'flex',
+    flexDirection: 'column',
+    background: 'rgba(9, 10, 15, 0.45)',
+    padding: '1.25rem',
+    borderRadius: '12px',
+    border: '1px solid rgba(255, 255, 255, 0.06)',
+  },
+  orderSummaryCard: {
+    padding: '1rem',
+    marginTop: '0.5rem',
+    background: 'rgba(204, 255, 0, 0.03)',
+    border: '1px solid rgba(204, 255, 0, 0.15)',
+    borderRadius: '10px',
+  },
+  summaryLine: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    fontSize: '0.8rem',
+    color: '#cbd5e1',
+    marginBottom: '0.4rem',
+  },
+  summaryTotalLine: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontSize: '0.95rem',
+    fontWeight: 800,
+    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+    paddingTop: '0.6rem',
+    marginTop: '0.4rem',
   },
   selectDropbox: {
     background: 'rgba(9, 10, 15, 0.7)',
@@ -842,19 +880,19 @@ const styles = {
   },
   slotsGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(8, 1fr)',
-    gap: '0.35rem',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: '0.45rem',
     marginBottom: '0.75rem',
   },
   slotBtn: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '0.35rem 0',
-    borderRadius: '6px',
-    background: 'rgba(255,255,255,0.01)',
-    border: '1px solid rgba(255,255,255,0.05)',
-    color: '#94a3b8',
+    padding: '0.5rem 0.25rem',
+    borderRadius: '8px',
+    background: 'rgba(255,255,255,0.02)',
+    border: '1px solid rgba(255,255,255,0.06)',
+    color: '#cbd5e1',
     cursor: 'pointer',
     transition: 'all 0.15s',
   },

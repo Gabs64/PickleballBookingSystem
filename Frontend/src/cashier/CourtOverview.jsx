@@ -3,7 +3,7 @@ import { useBooking } from '../context/BookingContext';
 import { Play, Sparkles, AlertCircle, Calendar, PlusCircle, CheckCircle } from 'lucide-react';
 
 export default function CourtOverview({ onQuickBook }) {
-  const { courts, bookings, getRelativeDateString } = useBooking();
+  const { courts, bookings, updateBookingStatus, getRelativeDateString } = useBooking();
   const [currentHourSlot, setCurrentHourSlot] = useState('');
   const [currentDateStr, setCurrentDateStr] = useState('');
 
@@ -51,17 +51,17 @@ export default function CourtOverview({ onQuickBook }) {
         </div>
         
         <div style={styles.statusLegend}>
-          <span style={styles.legendNode}><span style={{ ...styles.colorDot, background: '#10b981' }}></span> Available</span>
+          <span style={styles.legendNode}><span style={{ ...styles.colorDot, background: '#10b981' }}></span> Vacant</span>
           <span style={styles.legendNode}><span style={{ ...styles.colorDot, background: '#00f0ff' }}></span> Playing</span>
           <span style={styles.legendNode}><span style={{ ...styles.colorDot, background: '#fbbf24' }}></span> Reserved</span>
         </div>
       </div>
 
-      <div className="grid-4" style={{ marginTop: '1.5rem' }}>
+      <div className="grid-3" style={{ marginTop: '1.5rem' }}>
         {courts.map((court) => {
           const activeBooking = getCourtBookingAtCurrentHour(court.id);
           
-          let cardStatus = 'Available';
+          let cardStatus = 'Vacant';
           let statusColor = '#10b981';
           let statusGlow = 'rgba(16, 185, 129, 0.15)';
           
@@ -99,11 +99,10 @@ export default function CourtOverview({ onQuickBook }) {
                   <span style={{ ...styles.cardDot, background: statusColor }}></span>
                   {cardStatus.toUpperCase()}
                 </span>
-                <span style={styles.courtNameLabel}>{court.name.split(' ').slice(-1)}</span>
+                <span style={styles.courtNameLabel}>{court.type}</span>
               </div>
 
               <h3 style={styles.courtTitle}>{court.name}</h3>
-              <span style={styles.courtSubtitle}>{court.type}</span>
 
               <div style={styles.occupantDetails}>
                 {activeBooking ? (
@@ -121,27 +120,45 @@ export default function CourtOverview({ onQuickBook }) {
                   </div>
                 ) : (
                   <div style={styles.emptyBox}>
-                    <CheckCircle size={22} color="#10b981" style={{ opacity: 0.7 }} />
-                    <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500, marginTop: '0.35rem' }}>Court is Vacant</span>
-                    <p style={{ fontSize: '0.65rem', color: '#475569', marginTop: '0.15rem' }}>Ready for walk-in players</p>
+                    <CheckCircle size={24} color="#10b981" style={{ opacity: 0.8, marginBottom: '0.25rem' }} />
+                    <span style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 700 }}>Vacant & Ready</span>
+                    <p style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.15rem' }}>No players assigned for this hour</p>
                   </div>
                 )}
               </div>
 
               <div style={styles.cardActions}>
                 {activeBooking ? (
-                  <div style={styles.checkedInRow}>
-                    <span style={styles.paymentStatusLabel}>
-                      Payment: <strong style={{ color: activeBooking.paymentStatus === 'Paid' ? '#10b981' : '#fbbf24' }}>{activeBooking.paymentStatus}</strong>
-                    </span>
-                  </div>
+                  activeBooking.status === 'Paid' ? (
+                    <button 
+                      onClick={() => updateBookingStatus(activeBooking.id, 'Checked-In')}
+                      className="btn btn-primary btn-sm"
+                      style={{ width: '100%', background: '#00f0ff', color: '#090a0f', fontWeight: 700 }}
+                    >
+                      <Play size={14} /> Check In Players
+                    </button>
+                  ) : activeBooking.status === 'Checked-In' ? (
+                    <button 
+                      onClick={() => updateBookingStatus(activeBooking.id, 'Completed')}
+                      className="btn btn-primary btn-sm"
+                      style={{ width: '100%', background: '#c084fc', color: '#fff', fontWeight: 700 }}
+                    >
+                      <CheckCircle size={14} /> Mark Completed
+                    </button>
+                  ) : (
+                    <div style={styles.checkedInRow}>
+                      <span style={styles.paymentStatusLabel}>
+                        Status: <strong style={{ color: '#10b981' }}>{activeBooking.status}</strong>
+                      </span>
+                    </div>
+                  )
                 ) : (
                   <button 
                     onClick={() => onQuickBook(court.id, currentHourSlot)}
-                    className="btn btn-accent btn-sm"
+                    className="btn btn-primary btn-sm"
                     style={{ width: '100%' }}
                   >
-                    <PlusCircle size={14} /> Quick Book Walk-In
+                    <PlusCircle size={14} /> + Book Walk-In
                   </button>
                 )}
               </div>

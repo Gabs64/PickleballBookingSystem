@@ -52,18 +52,26 @@ export default function BookingTimeline({ onQuickBook }) {
     <div style={styles.container} className="animate-fade-in">
       <div style={styles.topBar}>
         <div>
-          <h3 style={styles.timelineTitle}>Interactive Scheduler Grid</h3>
-          <p style={styles.timelineSubtitle}>Daily scheduler map. Click any active block to manage reservation status. Click free slots to book instantly.</p>
+          <h3 style={styles.timelineTitle}>Court Schedule Map</h3>
+          <p style={styles.timelineSubtitle}>Click any active block to view details & status actions. Click any vacant cell to book walk-in instantly.</p>
         </div>
 
-        <div style={styles.dateSelector}>
-          <CalendarDays size={16} color="var(--accent-neon)" />
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-            style={styles.dateInput}
-          />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+          <div style={{ display: 'flex', gap: '0.85rem', fontSize: '0.75rem', color: '#cbd5e1' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981' }}></span> Reserved</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00f0ff' }}></span> Playing</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#c084fc' }}></span> Completed</span>
+          </div>
+
+          <div style={styles.dateSelector}>
+            <CalendarDays size={16} color="var(--accent-neon)" />
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              style={styles.dateInput}
+            />
+          </div>
         </div>
       </div>
 
