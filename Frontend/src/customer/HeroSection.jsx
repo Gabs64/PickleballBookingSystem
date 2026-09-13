@@ -19,7 +19,7 @@ export default function HeroSection({ onStartBooking }) {
           BOOK YOUR COURT IN SECONDS
         </h2>
         <p style={styles.paragraph}>
-          Reserve high-quality indoor cushion and outdoor acrylic pickleball courts with tournament LED lighting and complete equipment rental.
+          Reserve indoor and outdoor pickleball courts with complete equipment rental.
         </p>
 
         <div style={styles.btnRow}>

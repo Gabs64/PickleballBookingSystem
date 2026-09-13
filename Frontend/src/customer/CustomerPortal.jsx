@@ -397,7 +397,7 @@ export default function CustomerPortal() {
             <div style={styles.galleryCardContent}>
               <h3 style={styles.galleryCardTitle}>Court 3</h3>
               <p style={styles.galleryCardDesc}>
-                Open-air outdoor acrylic court equipped with high-power LED night floodlights.
+                Open-air outdoor acrylic court for social and match play.
               </p>
               <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent-neon)' }}>₱450.00 / hr</span>
