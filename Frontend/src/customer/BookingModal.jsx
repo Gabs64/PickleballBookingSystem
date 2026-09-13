@@ -207,7 +207,7 @@ export default function BookingModal({ isOpen, onClose }) {
         <div style={styles.header}>
           <div>
             <h3 style={styles.title}>
-              {bookingState === 'form' ? 'Instant Court Booking popup' : 'Booking Receipt Ticket'}
+              {bookingState === 'form' ? 'Reserve Court' : 'Booking Receipt Ticket'}
             </h3>
             <p style={styles.subtitle}>
               {bookingState === 'form' 
@@ -232,9 +232,9 @@ export default function BookingModal({ isOpen, onClose }) {
             <div style={styles.scrollContent}>
               
               <div style={styles.formRow2}>
-                {/* Court picker Dropdown Dropbox */}
+                {/* Court picker Dropdown */}
                 <div className="form-group" style={{ flex: 1.2 }}>
-                  <label className="form-label">CHOOSE A COURT (DROPBOX)</label>
+                  <label className="form-label">Select Court</label>
                   <select
                     value={courtId}
                     onChange={(e) => setCourtId(e.target.value)}
@@ -251,7 +251,7 @@ export default function BookingModal({ isOpen, onClose }) {
 
                 {/* Date Picker */}
                 <div className="form-group" style={{ flex: 0.8 }}>
-                  <label className="form-label">SELECT DATE</label>
+                  <label className="form-label">Select Date</label>
                   <input
                     type="date"
                     min={getRelativeDateString(0)}
@@ -414,19 +414,19 @@ export default function BookingModal({ isOpen, onClose }) {
 
 
               {/* Payment System Section */}
-              <h4 style={styles.sectionHeader}><CreditCard size={13} /> Payment Checkout system</h4>
+              <h4 style={styles.sectionHeader}><CreditCard size={13} /> Payment Method</h4>
               <div style={styles.formRow2}>
                 <div className="form-group" style={{ flex: 1 }}>
-                  <label className="form-label">PAYMENT CHANNEL</label>
+                  <label className="form-label">Select Payment</label>
                   <select
                     value={paymentMethod}
                     onChange={(e) => setPaymentMethod(e.target.value)}
                     className="form-control"
                     style={styles.selectDropbox}
                   >
-                    <option value="GCash E-Wallet">GCash Online Payment (Sandbox)</option>
-                    <option value="Maya Wallet">Maya E-Wallet (Sandbox)</option>
-                    <option value="Credit Card">Credit / Debit Card (Simulated)</option>
+                    <option value="GCash E-Wallet">GCash Online Payment</option>
+                    <option value="Maya Wallet">Maya E-Wallet</option>
+                    <option value="Credit Card">Credit / Debit Card</option>
                   </select>
                 </div>
 
@@ -610,7 +610,7 @@ export default function BookingModal({ isOpen, onClose }) {
             <div style={styles.passContainer}>
               <div style={styles.passHeader}>
                 <div>
-                  <h4 style={styles.passBrand}>{"<brand name>"}</h4>
+                  <h4 style={styles.passBrand}>NetRally</h4>
                   <p style={styles.passSub}>Pickleball Court Reservation Pass</p>
                 </div>
                 <div>

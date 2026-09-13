@@ -39,7 +39,7 @@ export default function CustomerPortal() {
   // Chatbot widget states
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { id: 1, sender: 'bot', text: "Welcome to <brand name>! 🏓 How can I assist you with your court rentals today?" }
+    { id: 1, sender: 'bot', text: "Welcome to NetRally! 🏓 How can I assist you with your court rentals today?" }
   ]);
   const [inputText, setInputText] = useState('');
 
@@ -306,11 +306,11 @@ export default function CustomerPortal() {
       {/* PREMIUM STICKY HEADER */}
       <header style={styles.header}>
         <div style={styles.headerLeft}>
-          <span style={styles.headerLogo} className="animate-gradient-text">{"<brand name>"}</span>
+          <span style={styles.headerLogo} className="animate-gradient-text">NetRally</span>
         </div>
         <nav style={styles.navMenu}>
           <a href="#home" onClick={(e) => handleNav(e, 'home')} style={styles.navLink}>Home</a>
-          <a href="#gallery" onClick={(e) => handleNav(e, 'gallery')} style={styles.navLink}>Gallery</a>
+          <a href="#gallery" onClick={(e) => handleNav(e, 'gallery')} style={styles.navLink}>Courts</a>
           <a href="#about" onClick={(e) => handleNav(e, 'about')} style={styles.navLink}>About</a>
           {(() => {
             const activeCustomer = loggedCustomer || (isLoginBypassed ? { id: 'USR-CUSTOMER-BYPASS', name: 'Jane Smith', email: 'jane.smith@gmail.com', phone: '0917-888-2938', role: 'Customer' } : null);
@@ -353,7 +353,7 @@ export default function CustomerPortal() {
 
         <div style={styles.galleryGrid} className="grid-3">
           {/* Card 1 */}
-          <div className="glass-card animate-dual-neon" style={styles.galleryCard}>
+          <div className="glass-card" style={styles.galleryCard}>
             <div style={styles.galleryImgPlaceholder}>
               <span style={{ fontSize: '2.5rem' }}>🏟️</span>
               <span style={styles.courtBadgeIndoor}>INDOOR CUSHION</span>
@@ -361,18 +361,17 @@ export default function CustomerPortal() {
             <div style={styles.galleryCardContent}>
               <h3 style={styles.galleryCardTitle}>Court 1</h3>
               <p style={styles.galleryCardDesc}>
-                Professional dark blue cushion match-court. Optimized for shock absorption to minimize strain on player joints.
+                Indoor cushion match-court optimized for shock absorption and comfort.
               </p>
-              <ul style={styles.cardSpecs}>
-                <li><Check size={12} color="var(--accent-neon)" style={{ marginRight: '4px' }} /> Low-glare LED nightlights</li>
-                <li><Check size={12} color="var(--accent-neon)" style={{ marginRight: '4px' }} /> Shaded spectator benches</li>
-                <li><Check size={12} color="var(--accent-neon)" style={{ marginRight: '4px' }} /> ₱450.00 flat hourly rate</li>
-              </ul>
+              <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent-neon)' }}>₱450.00 / hr</span>
+                <button onClick={startBooking} className="btn btn-sm btn-primary">Book Court 1</button>
+              </div>
             </div>
           </div>
 
           {/* Card 2 */}
-          <div className="glass-card animate-dual-neon" style={styles.galleryCard}>
+          <div className="glass-card" style={styles.galleryCard}>
             <div style={styles.galleryImgPlaceholder}>
               <span style={{ fontSize: '2.5rem' }}>🏓</span>
               <span style={styles.courtBadgeIndoor}>INDOOR CUSHION</span>
@@ -380,32 +379,30 @@ export default function CustomerPortal() {
             <div style={styles.galleryCardContent}>
               <h3 style={styles.galleryCardTitle}>Court 2</h3>
               <p style={styles.galleryCardDesc}>
-                High-rebound cushion court surface designed to support fast-paced rallies and professional tournament actions.
+                Climate-controlled indoor court designed for high-rebound competitive play.
               </p>
-              <ul style={styles.cardSpecs}>
-                <li><Check size={12} color="var(--accent-neon)" style={{ marginRight: '4px' }} /> Climate controlled building</li>
-                <li><Check size={12} color="var(--accent-neon)" style={{ marginRight: '4px' }} /> Acoustic court dividers</li>
-                <li><Check size={12} color="var(--accent-neon)" style={{ marginRight: '4px' }} /> ₱450.00 flat hourly rate</li>
-              </ul>
+              <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent-neon)' }}>₱450.00 / hr</span>
+                <button onClick={startBooking} className="btn btn-sm btn-primary">Book Court 2</button>
+              </div>
             </div>
           </div>
 
           {/* Card 3 */}
-          <div className="glass-card animate-dual-neon" style={styles.galleryCard}>
+          <div className="glass-card" style={styles.galleryCard}>
             <div style={styles.galleryImgPlaceholder}>
               <span style={{ fontSize: '2.5rem' }}>☀️</span>
-              <span style={styles.courtBadgeOutdoor}>OUTDOOR PREMIUM</span>
+              <span style={styles.courtBadgeOutdoor}>OUTDOOR ACRYLIC</span>
             </div>
             <div style={styles.galleryCardContent}>
               <h3 style={styles.galleryCardTitle}>Court 3</h3>
               <p style={styles.galleryCardDesc}>
-                Atmospheric open-air court featuring professional acrylic multi-layer texturing. Perfect for warm social double matches.
+                Open-air outdoor acrylic court equipped with high-power LED night floodlights.
               </p>
-              <ul style={styles.cardSpecs}>
-                <li><Check size={12} color="var(--accent-neon)" style={{ marginRight: '4px' }} /> Windbreak sport fencing</li>
-                <li><Check size={12} color="var(--accent-neon)" style={{ marginRight: '4px' }} /> High-power LED night floodlights</li>
-                <li><Check size={12} color="var(--accent-neon)" style={{ marginRight: '4px' }} /> ₱450.00 flat hourly rate</li>
-              </ul>
+              <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent-neon)' }}>₱450.00 / hr</span>
+                <button onClick={startBooking} className="btn btn-sm btn-primary">Book Court 3</button>
+              </div>
             </div>
           </div>
         </div>
@@ -713,87 +710,8 @@ export default function CustomerPortal() {
 
       {/* FOOTER */}
       <footer style={styles.footer}>
-        <p>© 2026 {"<brand name>"}. All rights reserved.</p>
-        <p style={{ fontSize: '0.7rem', color: '#475569', marginTop: '0.25rem' }}>Designed with premium Vanilla CSS & ReactJS components.</p>
+        <p>© 2026 NetRally Arena. All rights reserved.</p>
       </footer>
-
-      {/* HIGH-FIDELITY FLOATING FAQ WIDGET */}
-      <div style={styles.chatWrapper}>
-        {isChatOpen ? (
-          <div className="glass-card animate-modal-pop" style={styles.chatBox}>
-            <div style={styles.chatHeader}>
-              <div style={styles.chatHeaderLeft}>
-                <div style={styles.chatAvatar}>🤖</div>
-                <div>
-                  <h4 style={styles.chatBotName}>SupportBot</h4>
-                  <span style={styles.chatStatus}>{"<brand name>"} Support</span>
-                </div>
-              </div>
-              <button onClick={() => setIsChatOpen(false)} style={styles.chatCloseBtn}>
-                <X size={14} />
-              </button>
-            </div>
-
-            <div style={styles.chatMessages}>
-              {messages.map((m) => (
-                <div 
-                  key={m.id} 
-                  style={{
-                    ...styles.chatBubble,
-                    ...(m.sender === 'user' ? styles.chatBubbleUser : styles.chatBubbleBot)
-                  }}
-                >
-                  {m.text}
-                </div>
-              ))}
-            </div>
-
-            {/* Quick FAQs */}
-            <div style={styles.faqList}>
-              <button 
-                onClick={() => handleFaqClick("What are the court prices?", "All of our professional courts are priced at a flat rate of ₱450 per hour.")} 
-                style={styles.faqTag}
-              >
-                💰 Court Prices?
-              </button>
-              <button 
-                onClick={() => handleFaqClick("Can I rent paddles?", "Absolutely! Carbon Pro paddles are available for ₱50.00/hr, cans of balls for ₱150.00 flat, and pro shoes for ₱100.00.")} 
-                style={styles.faqTag}
-              >
-                🏓 Rent Paddles?
-              </button>
-              <button 
-                onClick={() => handleFaqClick("What is your refund policy?", "NetRally Arena operates under a strict NO REFUND and NO CANCELLATION policy. Once a court reservation is paid and booked, the schedule is locked and cannot be cancelled or refunded.")} 
-                style={styles.faqTag}
-              >
-                🔄 No Refund Policy
-              </button>
-            </div>
-
-            <form onSubmit={handleSendMessage} style={styles.chatInputRow}>
-              <input
-                type="text"
-                placeholder="Ask something..."
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                style={styles.chatInput}
-              />
-              <button type="submit" style={styles.chatSendBtn}>
-                <Send size={12} />
-              </button>
-            </form>
-          </div>
-        ) : (
-          <button 
-            onClick={() => setIsChatOpen(true)} 
-            style={styles.chatFloatingBtn}
-            className="animate-pulse-neon"
-          >
-            <MessageCircle size={22} color="var(--text-inverse)" />
-            <span style={styles.chatFloatingLabel}>FAQ Chat</span>
-          </button>
-        )}
-      </div>
 
     </div>
   );

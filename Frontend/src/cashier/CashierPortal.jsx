@@ -144,7 +144,7 @@ export default function CashierPortal() {
       <aside style={styles.sidebar}>
         <div style={styles.sidebarBranding}>
           <div>
-            <h3 style={styles.brandTitle}>{"<brand name> Terminal"}</h3>
+            <h3 style={styles.brandTitle}>NetRally Terminal</h3>
             <span style={styles.brandRole}>CASHIER CONSOLE</span>
           </div>
         </div>
@@ -155,7 +155,7 @@ export default function CashierPortal() {
           style={styles.newBookBtn}
         >
           <PlusCircle size={16} />
-          New Walk-In Book
+          New Walk-In Booking
         </button>
 
         <nav style={styles.navMenu}>
@@ -205,12 +205,11 @@ export default function CashierPortal() {
           <button 
             onClick={handleLogout} 
             className="btn btn-sm btn-danger" 
-            style={{ width: '100%', marginBottom: '1rem', fontSize: '0.75rem' }}
+            style={{ width: '100%', marginBottom: '0.75rem', fontSize: '0.75rem' }}
           >
             Terminal Logout
           </button>
-          <span style={styles.serverStatus}>⚡ Sandbox Local Server</span>
-          <span style={styles.serverIp}>PORT: 3000 (ReactJS + Vite)</span>
+          <span style={styles.serverStatus}>NetRally Reception</span>
         </div>
       </aside>
 
@@ -220,8 +219,8 @@ export default function CashierPortal() {
         {/* Terminal Header */}
         <header style={styles.terminalHeader}>
           <div style={styles.headerLeft}>
-            <span style={styles.terminalGreeting}>Reception counter: <strong>Active Session</strong></span>
-            <span style={styles.terminalTime}>TODAY: <strong style={{ color: '#fff' }}>{todayStr}</strong></span>
+            <span style={styles.terminalGreeting}>Reception counter: <strong>Active</strong></span>
+            <span style={styles.terminalTime}>Date: <strong style={{ color: '#fff' }}>{todayStr}</strong></span>
           </div>
 
           <div style={styles.headerRight}>

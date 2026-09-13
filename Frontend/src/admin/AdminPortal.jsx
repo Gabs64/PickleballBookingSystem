@@ -245,7 +245,7 @@ export default function AdminPortal() {
           </div>
           <div>
             <h3 style={styles.brandTitle}>Admin Console</h3>
-            <span style={styles.brandRole}>CENTRAL COMMAND</span>
+            <span style={styles.brandRole}>ADMINISTRATION</span>
           </div>
         </div>
 
@@ -294,12 +294,11 @@ export default function AdminPortal() {
           <button 
             onClick={handleLogout} 
             className="btn btn-sm btn-danger" 
-            style={{ width: '100%', marginBottom: '1rem', fontSize: '0.75rem' }}
+            style={{ width: '100%', marginBottom: '0.75rem', fontSize: '0.75rem' }}
           >
-            Command Log Out
+            Log Out
           </button>
-          <span style={styles.serverStatus}>⚡ Admin Control: Active</span>
-          <span style={styles.serverIp}>HOST: Gabs64-Local-Server</span>
+          <span style={styles.serverStatus}>NetRally Admin</span>
         </div>
       </aside>
 
@@ -309,8 +308,7 @@ export default function AdminPortal() {
         {/* Header */}
         <header style={styles.terminalHeader}>
           <div style={styles.headerLeft}>
-            <span style={styles.terminalGreeting}>System Command: <strong>Central Node</strong></span>
-            <span style={styles.terminalTime}>CONTROL SESSION: <strong style={{ color: '#fff' }}>ACTIVE</strong></span>
+            <span style={styles.terminalGreeting}>System Administrator: <strong>Active</strong></span>
           </div>
 
           <div style={styles.headerRight}>
@@ -394,27 +392,27 @@ export default function AdminPortal() {
 
             {/* Quick Overview Section */}
             <div className="glass-card" style={styles.contentBlock}>
-              <h3 style={styles.blockTitle}>System Overview & Server Diagnostics</h3>
+              <h3 style={styles.blockTitle}>System Overview</h3>
               <p style={styles.blockDesc}>
-                This system runs standard React context persistence mapped to `localStorage` sandbox tables. All actions executed in the cashier and admin console portals instantly synchronize on the active process.
+                Overview of user accounts, total court reservations, and cashier operators registered in the NetRally system.
               </p>
               
               <div style={styles.diagnosticsGrid}>
                 <div style={styles.diagItem}>
-                  <span style={styles.diagLabel}>Core Database Status</span>
-                  <span style={{ ...styles.diagVal, color: '#10b981' }}>🟢 SECURELY MOUNTED</span>
+                  <span style={styles.diagLabel}>System Status</span>
+                  <span style={{ ...styles.diagVal, color: '#10b981' }}>🟢 Active</span>
                 </div>
                 <div style={styles.diagItem}>
-                  <span style={styles.diagLabel}>Operator Table</span>
-                  <span style={styles.diagVal}>{cashierCount} Cashier Accounts Registered</span>
+                  <span style={styles.diagLabel}>Cashiers</span>
+                  <span style={styles.diagVal}>{cashierCount} Accounts</span>
                 </div>
                 <div style={styles.diagItem}>
-                  <span style={styles.diagLabel}>Customer Table</span>
-                  <span style={styles.diagVal}>{customerCount} Registered Customers</span>
+                  <span style={styles.diagLabel}>Customers</span>
+                  <span style={styles.diagVal}>{customerCount} Accounts</span>
                 </div>
                 <div style={styles.diagItem}>
-                  <span style={styles.diagLabel}>Administrators Node</span>
-                  <span style={styles.diagVal}>{adminCount} Superuser Admin Accounts</span>
+                  <span style={styles.diagLabel}>Administrators</span>
+                  <span style={styles.diagVal}>{adminCount} Accounts</span>
                 </div>
               </div>
             </div>

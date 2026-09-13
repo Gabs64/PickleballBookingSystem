@@ -62,9 +62,9 @@ function AppContent() {
       {/* Main Branding Section */}
       <div style={styles.header}>
         <div style={styles.logoBadge}>
-          <span>PORTAL HUB</span>
+          <span>PICKLEBALL BOOKING SYSTEM</span>
         </div>
-        <h1 style={styles.mainTitle}>{"<brand name>"}</h1>
+        <h1 style={styles.mainTitle}>NetRally</h1>
         <p style={styles.subtitle}>Pickleball Court Reservation & Reception Management System</p>
       </div>
 
@@ -88,14 +88,8 @@ function AppContent() {
             <h2 style={styles.cardTitle}>Customer Portal</h2>
           </div>
           <p style={styles.cardDesc}>
-            Access our user-friendly court reservation hub to book sessions, rent premium gear, and manage your tickets.
+            Reserve courts, select preferred playing hours, rent equipment, and receive instant digital booking passes.
           </p>
-          <ul style={styles.featureList}>
-            <li style={styles.featureItem}><Check size={14} color="#ccff00" style={{ marginRight: '6px' }} /> ₱450.00 Flat Hourly Rate</li>
-            <li style={styles.featureItem}><Check size={14} color="#ccff00" style={{ marginRight: '6px' }} /> Quick-Book Dropbox Selector</li>
-            <li style={styles.featureItem}><Check size={14} color="#ccff00" style={{ marginRight: '6px' }} /> GCash Sandbox Checkout</li>
-            <li style={styles.featureItem}><Check size={14} color="#ccff00" style={{ marginRight: '6px' }} /> Searchable Pass & Checkout engine</li>
-          </ul>
           <button 
             style={{
               ...styles.btnCustomer,
@@ -104,7 +98,7 @@ function AppContent() {
             className="btn"
             onClick={(e) => { e.stopPropagation(); navigateTo('customer'); }}
           >
-            <span>Enter Customer Booking</span>
+            <span>Book a Court</span>
             <ArrowRight size={16} style={{ marginLeft: '6px' }} />
           </button>
         </div>
@@ -124,17 +118,11 @@ function AppContent() {
             <div style={styles.iconWrapperCashier}>
               <Shield size={28} color="#00f0ff" />
             </div>
-            <h2 style={styles.cardTitle}>Cashier Console</h2>
+            <h2 style={styles.cardTitle}>Cashier Terminal</h2>
           </div>
           <p style={styles.cardDesc}>
-            Receptionist dashboard to record walk-in customers, view court occupancy timelines, and audit sales reports.
+            Receptionist console to handle walk-in reservations, check-in players, and view live court timelines.
           </p>
-          <ul style={styles.featureList}>
-            <li style={styles.featureItem}><Check size={14} color="#00f0ff" style={{ marginRight: '6px' }} /> Interactive Timeline Board</li>
-            <li style={styles.featureItem}><Check size={14} color="#00f0ff" style={{ marginRight: '6px' }} /> Register Search & check-in list</li>
-            <li style={styles.featureItem}><Check size={14} color="#00f0ff" style={{ marginRight: '6px' }} /> Register Walk-in bookings instantly</li>
-            <li style={styles.featureItem}><Check size={14} color="#00f0ff" style={{ marginRight: '6px' }} /> Hourly Sales Analytics reports</li>
-          </ul>
           <button 
             style={{
               ...styles.btnCashier,
@@ -163,17 +151,11 @@ function AppContent() {
             <div style={styles.iconWrapperAdmin}>
               <Shield size={28} color="#c084fc" />
             </div>
-            <h2 style={styles.cardTitle}>Admin Console</h2>
+            <h2 style={styles.cardTitle}>Admin Portal</h2>
           </div>
           <p style={styles.cardDesc}>
-            Manage system operators, create cashier and customer accounts, audit registered accounts, and review database records.
+            System administrator panel to manage user accounts, register cashier staff profiles, and configure settings.
           </p>
-          <ul style={styles.featureList}>
-            <li style={styles.featureItem}><Check size={14} color="#c084fc" style={{ marginRight: '6px' }} /> Control accounts in database</li>
-            <li style={styles.featureItem}><Check size={14} color="#c084fc" style={{ marginRight: '6px' }} /> Register new cashier profiles</li>
-            <li style={styles.featureItem}><Check size={14} color="#c084fc" style={{ marginRight: '6px' }} /> Manage customer logins centrally</li>
-            <li style={styles.featureItem}><Check size={14} color="#c084fc" style={{ marginRight: '6px' }} /> Real-time active shifts overview</li>
-          </ul>
           <button 
             style={{
               ...styles.btnAdmin,
@@ -182,7 +164,7 @@ function AppContent() {
             className="btn"
             onClick={(e) => { e.stopPropagation(); navigateTo('admin'); }}
           >
-            <span>Enter Admin Dashboard</span>
+            <span>Enter Admin Portal</span>
             <ArrowRight size={16} style={{ marginLeft: '6px' }} />
           </button>
         </div>
@@ -190,10 +172,7 @@ function AppContent() {
 
       {/* Selector footer info */}
       <footer style={styles.footer}>
-        <p>© 2026 {"<brand name>"}. All rights reserved.</p>
-        <p style={{ fontSize: '0.65rem', color: '#475569', marginTop: '0.25rem' }}>
-          This system is fully sandboxed in memory for demonstration purposes.
-        </p>
+        <p>© 2026 NetRally Arena. All rights reserved.</p>
       </footer>
     </div>
   );

@@ -8,24 +8,24 @@ export default function HeroSection({ onStartBooking }) {
         <div style={styles.badgeContainer}>
           <span style={styles.badgeText} className="animate-pulse-neon">
             <Zap size={12} fill="#ccff00" color="#ccff00" />
-            VOTED #1 COURT FOR RENTAL IN THE METRO
+            PREMIER PICKLEBALL COURTS
           </span>
         </div>
         
         <h1 style={styles.headline} className="animate-gradient-text">
-          {"<brand name>"}
+          NetRally
         </h1>
         <h2 style={styles.subHeadline}>
-          ELITE PICKLEBALL COURTS & PREMIER CLUB EXPERIENCE
+          BOOK YOUR COURT IN SECONDS
         </h2>
         <p style={styles.paragraph}>
-          Experience the thrill of the fastest-growing sport on our state-of-the-art courts. We offer premium tournament-grade indoor cushion courts and windswept outdoor surfaces complete with LED nightlights and professional paddle rentals.
+          Reserve high-quality indoor cushion and outdoor acrylic pickleball courts with tournament LED lighting and complete equipment rental.
         </p>
 
         <div style={styles.btnRow}>
-          <button onClick={onStartBooking} className="btn btn-primary">
+          <button onClick={onStartBooking} className="btn btn-primary" style={{ padding: '0.85rem 2rem', fontSize: '1rem' }}>
             <Calendar size={18} style={{ marginRight: '6px' }} />
-            Book A Court Now
+            Book Court Now
           </button>
         </div>
       </div>
@@ -36,8 +36,8 @@ export default function HeroSection({ onStartBooking }) {
             <Trophy size={20} />
           </div>
           <div>
-            <h4 style={styles.metricTitle}>4 Pro Courts</h4>
-            <p style={styles.metricDesc}>2 Indoor Cushion, 2 Outdoor Acrylic</p>
+            <h4 style={styles.metricTitle}>3 Pro Courts</h4>
+            <p style={styles.metricDesc}>Indoor Cushion & Outdoor Surfaces</p>
           </div>
         </div>
 
@@ -46,8 +46,8 @@ export default function HeroSection({ onStartBooking }) {
             <Zap size={20} />
           </div>
           <div>
-            <h4 style={styles.metricTitle}>Complete Gear Rental</h4>
-            <p style={styles.metricDesc}>Carbon paddles, balls, and pro court shoes</p>
+            <h4 style={styles.metricTitle}>₱450.00 / Hour</h4>
+            <p style={styles.metricDesc}>Flat Rate, Instant Confirmation</p>
           </div>
         </div>
 
@@ -56,8 +56,8 @@ export default function HeroSection({ onStartBooking }) {
             <ShieldCheck size={20} />
           </div>
           <div>
-            <h4 style={styles.metricTitle}>Elite Service</h4>
-            <p style={styles.metricDesc}>Lounge areas, clean showers & hydration bar</p>
+            <h4 style={styles.metricTitle}>Equipment Rental</h4>
+            <p style={styles.metricDesc}>Paddles, Cans of Balls & Court Shoes</p>
           </div>
         </div>
       </div>
